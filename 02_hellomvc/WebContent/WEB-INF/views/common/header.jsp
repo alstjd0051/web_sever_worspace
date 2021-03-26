@@ -3,9 +3,24 @@
     pageEncoding="UTF-8"%>
 
 <%
-	String msg = (String)request.getAttribute("msg");
+	String msg = (String)session.getAttribute("msg");
+	if(msg != null) session.removeAttribute("msg");
+	
 	String loc = (String)request.getAttribute("loc");
 	Member loginMember = (Member)session.getAttribute("loginMember");
+	
+	//사용자 쿠키처리
+	String saveId = null;
+	Cookie[] cookies = request.getCookies();
+	if(cookies != null){
+		for(Cookie c : cookies){
+			String name = c.getName();
+			String value = c.getValue();
+			//System.out.println(name + " : " + value);
+			if("saveId".equals(name))
+				saveId = value;
+		}
+	}
 	
 %>
 <!DOCTYPE html>
@@ -59,7 +74,9 @@ $(function(){
 				<form id="loginFrm" action="<%= request.getContextPath() %>/member/login" method="POST">
 					<table>
 						<tr>
-							<td><input type="text" name="memberId" id="memberId" placeholder="아이디" tabindex="1"></td>
+							<td><input 
+									type="text" name="memberId" id="memberId" 
+									placeholder="아이디" tabindex="1" value="<%= saveId != null ? saveId : "" %>"></td>
 							<td><input type="submit" value="로그인" tabindex="3"></td>
 						</tr>
 						<tr>
@@ -68,9 +85,9 @@ $(function(){
 						</tr>
 						<tr>
 							<td colspan="2">
-								<input type="checkbox" name="saveId" id="saveId" />
+								<input type="checkbox" name="saveId" id="saveId" <%= saveId != null ? "checked" : ""%>/>
 								<label for="saveId">아이디저장</label>&nbsp;&nbsp;
-								<input type="button" value="회원가입">
+								<input type="button" value="회원가입" onclick="location.href='<%= request.getContextPath() %>/member/memberEnroll';">
 							</td>
 						</tr>
 					</table>
@@ -85,11 +102,11 @@ $(function(){
 					<tr>
 						<td> 
 							<input type="button" value="내정보보기" />
-							<input type="button" value="로그아웃" />
+							<input type="button" value="로그아웃" 
+								onclick="location.href='<%= request.getContextPath() %>/member/logout';" />
 						</td>
 					</tr>
 				</table>
-				
 				
 				
 				

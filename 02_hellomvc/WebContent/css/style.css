@@ -17,9 +17,9 @@ header div.login-container{width:250px; position:absolute; right: 0px; top: 10px
 #saveId+label{font-size:12px;font-family:'고딕'}
 
 /* 로그인성공후 */
-	div.login-container table#login{border-spacing:10px;}
-	div.login-container table#login input[type=button]{border-radius:3px;}
-	
+div.login-container table#login{border-spacing:10px;}
+div.login-container table#login input[type=button]{border-radius:3px;}
+
 /* 메뉴관련스타일 */
 header nav {background:#5283de; width:100%; margin-top:40px;}
 
@@ -61,6 +61,22 @@ ul.main-nav li:hover > a{
 
 /********** content **********/
 section#content	{ background-color:#F5F5F5; float:left; width:940px; min-height:500px; }
+
+/* 회원가입페이지 */
+section#enroll-container {text-align:center;}
+section#enroll-container input{margin:3px;}
+section#enroll-container table{margin:0 auto;}
+section#enroll-container table th {padding:0 10px; text-align:right;}
+section#enroll-container table td {padding:0 10px; text-align:left;}
+section#enroll-container sup{color: red;}
+
+
+
+
+
+
+
+
 
 /********** footer **********/
 footer			{ background-color:#00bcd4; clear:both; height:75px; text-align:center;padding-top:40px;}
