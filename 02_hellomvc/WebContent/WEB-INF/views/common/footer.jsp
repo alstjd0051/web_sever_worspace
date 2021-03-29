@@ -3,7 +3,7 @@
 		</section>
 
 		<footer>
-			<p>&lt;1996-2021 <strong>miiin_sseong</strong>&gt;</p>
+			<p>&lt;Copyright 1998-2021 <strong>KH정보교육원</strong>. All rights reserved.&gt;</p>
 		</footer>
 	</div>
 </body>
