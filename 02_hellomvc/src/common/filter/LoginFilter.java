@@ -20,7 +20,8 @@ import member.model.vo.Member;
 @WebFilter(urlPatterns = { 
 	"/member/memberView", 
 	"/member/memberUpdate", 
-	"/member/memberDelete" 
+	"/member/memberDelete", 
+	"/member/updatePassword" 
 })
 public class LoginFilter implements Filter {
 
