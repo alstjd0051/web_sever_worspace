@@ -1,4 +1,3 @@
-
 --게시판생성
 create table board (	
     no number, 
@@ -113,4 +112,5 @@ insert into web.board (no,title,writer,content,reg_date,read_count) values (seq_
 commit;
 
 select * from board;
+select * from attachment;
 select * from member;
