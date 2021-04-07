@@ -4,7 +4,7 @@ public class Attachment {
 
 	private int no;
 	private int boardNo;
-	private String orginalFileName;
+	private String originalFileName;
 	private String renamedFileName;
 	private boolean status; // staus Y | N 처리되므로, jdbc에서 형변환필요.
 	
@@ -12,11 +12,11 @@ public class Attachment {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Attachment(int no, int boardNo, String orginalFileName, String renamedFileName, boolean status) {
+	public Attachment(int no, int boardNo, String originalFileName, String renamedFileName, boolean status) {
 		super();
 		this.no = no;
 		this.boardNo = boardNo;
-		this.orginalFileName = orginalFileName;
+		this.originalFileName = originalFileName;
 		this.renamedFileName = renamedFileName;
 		this.status = status;
 	}
@@ -32,11 +32,11 @@ public class Attachment {
 	public void setBoardNo(int boardNo) {
 		this.boardNo = boardNo;
 	}
-	public String getOrginalFileName() {
-		return orginalFileName;
+	public String getOriginalFileName() {
+		return originalFileName;
 	}
-	public void setOrginalFileName(String orginalFileName) {
-		this.orginalFileName = orginalFileName;
+	public void setOriginalFileName(String orginalFileName) {
+		this.originalFileName = orginalFileName;
 	}
 	public String getRenamedFileName() {
 		return renamedFileName;
@@ -52,7 +52,7 @@ public class Attachment {
 	}
 	@Override
 	public String toString() {
-		return "Attachment [no=" + no + ", boardNo=" + boardNo + ", orginalFileName=" + orginalFileName
+		return "Attachment [no=" + no + ", boardNo=" + boardNo + ", originalFileName=" + originalFileName
 				+ ", renamedFileName=" + renamedFileName + ", status=" + status + "]";
 	}
 	
