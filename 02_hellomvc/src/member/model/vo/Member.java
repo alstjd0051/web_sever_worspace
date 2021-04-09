@@ -1,5 +1,6 @@
 package member.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -7,20 +8,24 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 /**
  * 
- * VO클래스
+ * member테이블의 한행에 상응하는 vo클래스
+ * (dto, entity, bean)
+ *
+ *
+ * HttpSessionBindingListener인터페이스 구현
+ * 현재객체가 session에 속성으로 등록 혹은 해제되는 이벤트 감지처리
  * 
- * DB테이블의 한행의 정보를 가지고 있는 객체
  */
-public class Member implements HttpSessionBindingListener {
-	
-	private String memberId;
-	private String password;
-	private String memberName;
-	private String memberRole;
+public class Member implements Serializable, HttpSessionBindingListener {
+
+	private String memberId;	//필수
+	private String password;	//필수
+	private String memberName;	//필수
+	private String memberRole;	//필수
 	private String gender;
-	private Date birthday;
+	private Date birthDay;
 	private String email;
-	private String phone;
+	private String phone;		//필수
 	private String address;
 	private String hobby;
 	private Date enrollDate;
@@ -29,7 +34,8 @@ public class Member implements HttpSessionBindingListener {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Member(String memberId, String password, String memberName, String memberRole, String gender, Date birthday,
+	
+	public Member(String memberId, String password, String memberName, String memberRole, String gender, Date birthDay,
 			String email, String phone, String address, String hobby, Date enrollDate) {
 		super();
 		this.memberId = memberId;
@@ -37,13 +43,14 @@ public class Member implements HttpSessionBindingListener {
 		this.memberName = memberName;
 		this.memberRole = memberRole;
 		this.gender = gender;
-		this.birthday = birthday;
+		this.birthDay = birthDay;
 		this.email = email;
 		this.phone = phone;
 		this.address = address;
 		this.hobby = hobby;
 		this.enrollDate = enrollDate;
 	}
+	
 	public String getMemberId() {
 		return memberId;
 	}
@@ -74,11 +81,11 @@ public class Member implements HttpSessionBindingListener {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public Date getBirthday() {
-		return birthday;
+	public Date getBirthDay() {
+		return birthDay;
 	}
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
+	public void setBirthDay(Date birthDay) {
+		this.birthDay = birthDay;
 	}
 	public String getEmail() {
 		return email;
@@ -110,28 +117,28 @@ public class Member implements HttpSessionBindingListener {
 	public void setEnrollDate(Date enrollDate) {
 		this.enrollDate = enrollDate;
 	}
+	
 	@Override
 	public String toString() {
 		return "Member [memberId=" + memberId + ", password=" + password + ", memberName=" + memberName
-				+ ", memberRole=" + memberRole + ", gender=" + gender + ", birthday=" + birthday + ", email=" + email
+				+ ", memberRole=" + memberRole + ", gender=" + gender + ", birthDay=" + birthDay + ", email=" + email
 				+ ", phone=" + phone + ", address=" + address + ", hobby=" + hobby + ", enrollDate=" + enrollDate + "]";
 	}
-	
+
 	/**
-	 * Session객체에 현재객체가 속성으로 등록될때 호출되는 event listener
+	 * 세션에 memberLoggedIn 등록되는 경우
 	 */
 	@Override
-	public void valueBound(HttpSessionBindingEvent ev) {
-		System.out.println(memberName + "[" + memberId + "]님이 로그인 했습니다.");
+	public void valueBound(HttpSessionBindingEvent event) {
+//		System.out.println("[" + memberId + "]님이 로그인 하였습니다.");
+	}
+
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+//		System.out.println("[" + memberId + "]님이 로그아웃 하였습니다.");		
 	}
 	
-	/**
-	 * Session객체에 현재객체가 속성에서 해제 될때 호출되는 event listener
-	 * session이 무효화될때도 호출.
-	 */
-	@Override
-	public void valueUnbound(HttpSessionBindingEvent ev) {
-		System.out.println(memberName + "[" + memberId + "]님이 로그아웃 했습니다.");
-	}
+	
+	
 	
 }

@@ -2,80 +2,101 @@ package board.model.vo;
 
 import java.sql.Date;
 
+/**
+ * 
+ * board_comment테이블과 상응하는 VO클래스
+ *
+ */
 public class BoardComment {
 
-	private int no;				//PK
-	private int commentLevel; 	//댓글 1, 대대글 2
-	private String writer;
-	private String content;
-	private int boardNo;	  	//참조게시글
-	private int commentRef;		//대댓글인 경우 참조댓글, 댓글인 경우 null
-	private Date regDate;
+	private int boardCommentNo;
+	private int boardCommentLevel;
+	private String boardCommentWriter;
+	private String boardCommentContent;
+	private int boardRef;
+	private int boardCommentRef;
+	private Date boardCommentDate;
 	
 	public BoardComment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public BoardComment(int no, int commentLevel, String writer, String content, int boardNo, int commentRef,
-			Date regDate) {
+
+	public BoardComment(int boardCommentNo, int boardCommentLevel, String boardCommentWriter,
+			String boardCommentContent, int boardRef, int boardCommentRef, Date boardCommentDate) {
 		super();
-		this.no = no;
-		this.commentLevel = commentLevel;
-		this.writer = writer;
-		this.content = content;
-		this.boardNo = boardNo;
-		this.commentRef = commentRef;
-		this.regDate = regDate;
+		this.boardCommentNo = boardCommentNo;
+		this.boardCommentLevel = boardCommentLevel;
+		this.boardCommentWriter = boardCommentWriter;
+		this.boardCommentContent = boardCommentContent;
+		this.boardRef = boardRef;
+		this.boardCommentRef = boardCommentRef;
+		this.boardCommentDate = boardCommentDate;
 	}
-	public int getNo() {
-		return no;
+
+	public int getBoardCommentNo() {
+		return boardCommentNo;
 	}
-	public void setNo(int no) {
-		this.no = no;
+
+	public void setBoardCommentNo(int boardCommentNo) {
+		this.boardCommentNo = boardCommentNo;
 	}
-	public int getCommentLevel() {
-		return commentLevel;
+
+	public int getBoardCommentLevel() {
+		return boardCommentLevel;
 	}
-	public void setCommentLevel(int commentLevel) {
-		this.commentLevel = commentLevel;
+
+	public void setBoardCommentLevel(int boardCommentLevel) {
+		this.boardCommentLevel = boardCommentLevel;
 	}
-	public String getWriter() {
-		return writer;
+
+	public String getBoardCommentWriter() {
+		return boardCommentWriter;
 	}
-	public void setWriter(String writer) {
-		this.writer = writer;
+
+	public void setBoardCommentWriter(String boardCommentWriter) {
+		this.boardCommentWriter = boardCommentWriter;
 	}
-	public String getContent() {
-		return content;
+
+	public String getBoardCommentContent() {
+		return boardCommentContent;
 	}
-	public void setContent(String content) {
-		this.content = content;
+
+	public void setBoardCommentContent(String boardCommentContent) {
+		this.boardCommentContent = boardCommentContent;
 	}
-	public int getBoardNo() {
-		return boardNo;
+
+	public int getBoardRef() {
+		return boardRef;
 	}
-	public void setBoardNo(int boardNo) {
-		this.boardNo = boardNo;
+
+	public void setBoardRef(int boardRef) {
+		this.boardRef = boardRef;
 	}
-	public int getCommentRef() {
-		return commentRef;
+
+	public int getBoardCommentRef() {
+		return boardCommentRef;
 	}
-	public void setCommentRef(int commentRef) {
-		this.commentRef = commentRef;
+
+	public void setBoardCommentRef(int boardCommentRef) {
+		this.boardCommentRef = boardCommentRef;
 	}
-	public Date getRegDate() {
-		return regDate;
+
+	public Date getBoardCommentDate() {
+		return boardCommentDate;
 	}
-	public void setRegDate(Date regDate) {
-		this.regDate = regDate;
+
+	public void setBoardCommentDate(Date boardCommentDate) {
+		this.boardCommentDate = boardCommentDate;
 	}
+
 	@Override
 	public String toString() {
-		return "BoardComment [no=" + no + ", commentLevel=" + commentLevel + ", writer=" + writer + ", content="
-				+ content + ", boardNo=" + boardNo + ", commentRef=" + commentRef + ", regDate=" + regDate + "]";
+		return "BoardComment [boardCommentNo=" + boardCommentNo + ", boardCommentLevel=" + boardCommentLevel
+				+ ", boardCommentWriter=" + boardCommentWriter + ", boardCommentContent=" + boardCommentContent
+				+ ", boardRef=" + boardRef + ", boardCommentRef=" + boardCommentRef + ", boardCommentDate="
+				+ boardCommentDate + "]";
 	}
-	
-	
 	
 	
 	

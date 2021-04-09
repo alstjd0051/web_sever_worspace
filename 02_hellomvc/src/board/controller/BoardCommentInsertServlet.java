@@ -1,7 +1,6 @@
 package board.controller;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,29 +17,30 @@ import board.model.vo.BoardComment;
 public class BoardCommentInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BoardService boardService = new BoardService();
-	
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//1. 사용자 입력값 처리
-			int boardNo = Integer.parseInt(request.getParameter("boardNo"));
-			int commentLevel = Integer.parseInt(request.getParameter("commentLevel"));
-			int commentRef = Integer.parseInt(request.getParameter("commentRef"));
-			String writer = request.getParameter("writer");
-			String content = request.getParameter("content");
-			BoardComment bc = new BoardComment(0, commentLevel, writer, content, boardNo, commentRef, null);
-			System.out.println("boardComment@servlet = " + bc);
-			
-			//2. 업무로직
-			int result = boardService.insertBoardComment(bc);
-			
-			//3. 사용자피드백 & 리다이렉트
-			request.getSession().setAttribute("msg", "댓글 등록 성공!");
-			response.sendRedirect(request.getContextPath() + "/board/boardView?no=" + boardNo);
+		//1.파라미터 처리
+		int boardRef = Integer.parseInt(request.getParameter("boardRef")); //참조원글
+		int boardCommentLevel = Integer.parseInt(request.getParameter("boardCommentLevel")); // 1,2
+		int boardCommentRef = Integer.parseInt(request.getParameter("boardCommentRef")); //게시판댓글참조번호
+		String boardCommentWriter = request.getParameter("boardCommentWriter");
+		String boardCommentContent = request.getParameter("boardCommentContent");
 		
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+		BoardComment bc = new BoardComment(0, boardCommentLevel, boardCommentWriter, boardCommentContent, boardRef, boardCommentRef, null);
+		System.out.println("bc@BoardCommentInsertServlet = " + bc);
+		
+		
+		//2.업무로직 : 댓글 등록
+		int result = boardService.insertBoardComment(bc);
+		String msg = result > 0 ? "댓글 등록 성공!" : "댓글 등록 실패!";
+		
+		//3. 메세지 session속성저장 및  리다이렉트처리 :url이 변경되는것이기때문에
+		request.getSession().setAttribute("msg", msg);
+		response.sendRedirect(request.getContextPath() + "/board/boardView?boardNo=" + boardRef);
+		//게시글 넘버가 필요한대 boardRef가 게시글 넘버
+		
 	}
 
 }

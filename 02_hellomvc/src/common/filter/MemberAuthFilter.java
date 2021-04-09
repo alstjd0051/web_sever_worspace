@@ -16,20 +16,15 @@ import javax.servlet.http.HttpSession;
 import member.model.vo.Member;
 
 /**
- * Servlet Filter implementation class LoginFilter
+ * Servlet Filter implementation class MemberAuthFilter
  */
-@WebFilter({ 
-	"/member/memberView", 
-	"/member/memberUpdate", 
-	"/member/memberDelete",
-	"/board/boardEnroll"
-})
-public class LoginFilter implements Filter {
+@WebFilter("/member/memberView")
+public class MemberAuthFilter implements Filter {
 
     /**
      * Default constructor. 
      */
-    public LoginFilter() {
+    public MemberAuthFilter() {
         // TODO Auto-generated constructor stub
     }
 
@@ -41,21 +36,25 @@ public class LoginFilter implements Filter {
 	}
 
 	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+	 * 로그인한사용자의 아이디 | 조회아이디가 동일한지 여부
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		//조회아이디
+		String reqMemberId = request.getParameter("memberId");
+		//로그인한사용자의 아이디 
 		HttpServletRequest httpReq = (HttpServletRequest)request;
 		HttpSession session = httpReq.getSession();
 		Member memberLoggedIn = (Member)session.getAttribute("memberLoggedIn");
 		
-		//로그인하지 않은 경우
-		if(memberLoggedIn == null) {
+		if(reqMemberId == null 
+		|| memberLoggedIn == null
+		|| !reqMemberId.equals(memberLoggedIn.getMemberId())) {
 			HttpServletResponse httpResp = (HttpServletResponse)response;
-			session.setAttribute("msg", "로그인 후 이용하실 수 있습니다.");
+			session.setAttribute("msg", "잘못된 경로로 접근하셨습니다.");
 			httpResp.sendRedirect(httpReq.getContextPath());
 			return;
 		}
-
+		
 		chain.doFilter(request, response);
 	}
 

@@ -9,155 +9,106 @@ import java.sql.Connection;
 import java.util.List;
 
 import board.model.dao.BoardDao;
-import board.model.vo.Attachment;
 import board.model.vo.Board;
 import board.model.vo.BoardComment;
 
 public class BoardService {
 
 	private BoardDao boardDao = new BoardDao();
-
-	public List<Board> selectList(int start, int end) {
+	
+	public List<Board> selectBoardList(int cpage, int numPerPage) {
 		Connection conn = getConnection();
-		List<Board> list = boardDao.selectList(conn, start, end);
+		List<Board> list= boardDao.selectBoardList(conn, cpage, numPerPage);
 		close(conn);
 		return list;
 	}
 
 	public int selectBoardCount() {
 		Connection conn = getConnection();
-		int totalContents = boardDao.selectBoardCount(conn);
+		int totalBoardCount = boardDao.selectBoardCount(conn);
 		close(conn);
-		return totalContents;
+		return totalBoardCount;
 	}
-	
-	/**
-	 * 첨부파일 있는 경우, attach객체를 attachment테이블에 등록한다. 
-	 * - board등록, attachment등록은 하나의 트랜잭션으로 처리되어야한다.
-	 * - 하나의 Connection에 의해 처리되어야한다.
-	 * 
-	 * @param board
-	 * @return
-	 */
+
 	public int insertBoard(Board board) {
 		Connection conn = getConnection();
-		int result = 0;
-		
-		try {
-			result = boardDao.insertBoard(conn, board);
-			
-			//생성된 board_no를 가져오기
+		int result = boardDao.insertBoard(conn, board);
+		if(result > 0) {
+			//게시글 성공한 경우, 등록된 게시글 번호 가져오기
 			int boardNo = boardDao.selectLastBoardNo(conn);
-			//redirect location설정
-			board.setNo(boardNo);
-			
-//			System.out.println("boardNo@service = " + boardNo);
-			
-			if(board.getAttach() != null) {
-				//참조할 boardNo세팅
-				board.getAttach().setBoardNo(boardNo);
-				result = boardDao.insertAttachment(conn, board.getAttach());
-			}
+			board.setBoardNo(boardNo);
 			commit(conn);
-			
-		} catch(Exception e) {
-			rollback(conn);
-			throw e;
-		} finally {			
-			close(conn);
 		}
+		else rollback(conn);
+		
+		close(conn);
 		return result;
 	}
-	
-	public Board selectOne(int no) {
+
+	public Board selectOne(int boardNo) {
 		Connection conn = getConnection();
-		Board board = boardDao.selectOne(conn, no);
-		Attachment attach = boardDao.selectOneAttachment(conn, no);
-		board.setAttach(attach);
+		Board board = boardDao.selectOne(conn, boardNo);
 		close(conn);
 		return board;
 	}
 
-	/**
-	 * board_no로 attachment 행 조회
-	 * 
-	 * @param no
-	 * @return
-	 */
-	public Attachment selectOneAttachment(int no) {
+	public int updateBoardReadCount(int boardNo) {
 		Connection conn = getConnection();
-		Attachment attach = boardDao.selectOneAttachment(conn, no);
+		int result = boardDao.updateBoardReadCount(conn, boardNo);
+		if(result > 0) commit(conn);
+		else rollback(conn);
 		close(conn);
-		return attach;
+		return result;
 	}
 
-	public int deleteBoard(int no) {
+	public int deleteBoard(int boardNo) {
 		Connection conn = getConnection();
-		int result = 0;
-		try {
-			result = boardDao.deleteBoard(conn, no);
-			if(result == 0)
-				throw new IllegalArgumentException("해당 게시글이 존재하지 않습니다. : " + no );
-			commit(conn);
-		} catch(Exception e) {
-			rollback(conn);
-			throw e; //controller가 예외처리를 결정할 수 있도록 넘김.
-		} finally {
-			close(conn);
-		}
+		int result = boardDao.deleteBoard(conn, boardNo);
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		close(conn);
 		return result;
 	}
-
-	public int updateBoard(Board board) {
-		Connection conn = getConnection(); 
-		int result = 0;
-		try {
-			//1.board update
-			result = boardDao.updateBoard(conn, board);
-			//2.attachment insert
-			if(board.getAttach() != null)
-				result = boardDao.insertAttachment(conn, board.getAttach());
-
+	
+	public int updateBoard(Board b) {
+		Connection conn = getConnection();
+		int result = boardDao.updateBoard(conn, b);
+		if(result>0)
 			commit(conn);
-		} catch(Exception e) {
+		else 
 			rollback(conn);
-			throw e;
-		}
-		return result;
-	}
-
-	public int deleteAttachment(String attachNo) {
-		Connection conn = getConnection(); 
-		int result = 0;
-		try {
-			result = boardDao.deleteAttachment(conn, attachNo);
-			commit(conn);
-		} catch(Exception e) {
-			rollback(conn);
-			throw e;
-		}
+		close(conn);
 		return result;
 	}
 
 	public int insertBoardComment(BoardComment bc) {
-		Connection conn = getConnection(); 
-		int result = 0;
-		try {
-			result = boardDao.insertBoardComment(conn, bc);
+		Connection conn = getConnection();
+		int result = boardDao.insertBoardComment(conn, bc);
+		if(result>0)
 			commit(conn);
-		} catch(Exception e) {
+		else 
 			rollback(conn);
-			throw e;
-		}
+		close(conn);
+		return result;
+	}
+	
+	public List<BoardComment> selectCommentList(int board_no) {
+		Connection conn = getConnection();
+		List<BoardComment> list= boardDao.selectCommentList(conn, board_no);
+		close(conn);
+		return list;
+	}
+
+	public int deleteBoardComment(int boardCommentNo) {
+		Connection conn = getConnection();
+		int result = boardDao.deleteBoardComment(conn, boardCommentNo);
+		if(result>0)
+			commit(conn);
+		else 
+			rollback(conn);
+		close(conn);
 		return result;
 	}
 
-	public List<BoardComment> selectBoardCommentList(int no) {
-		Connection conn = getConnection();
-		List<BoardComment> commentList = boardDao.selectBoardCommentList(conn, no);
-		close(conn);
-		return commentList;
-	}
 
-	
 }

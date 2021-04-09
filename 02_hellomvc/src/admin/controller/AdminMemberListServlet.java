@@ -9,68 +9,56 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import common.MvcUtils;
-import member.model.service.MemberService;
+import admin.model.service.AdminService;
+import common.util.MvcUtils;
 import member.model.vo.Member;
 
 /**
- * Paging Recipe
- * A. Contents Section : 쿼리
- * 		1. start rownum ~ end rownum
- * 		2. cPage 현재페이지, numPerPage 페이지당표시할 컨텐츠수
+ * 페이징 처리
+ * 1. 컨텐츠영역
+ * 2. 페이지바영역
  * 
- * B. Pagebar Section : html작성
- * 		1. totalContents 총 컨텐츠수
- * 		2. totalPage 전체페이지수 
- * 		3. pageBarSize 페이지바에 표시할 페이지 개수
- * 		4. pageNo 페이지넘버를 출력할 증감변수
- * 		5. pageStart ~ pageEnd pageNo의 범위
+ * 페이징 공식
+ * 1. 시작게시물no ~ 마지막게시물no
+ * 2. 전체페이지수 
+ * 3. 페이지바 시작no
  * 
  */
 @WebServlet("/admin/memberList")
 public class AdminMemberListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private AdminService adminService = new AdminService();
 	
-	private MemberService memberService = new MemberService();
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1. 사용자입력값 : 현재페이지 cPage
-		final int numPerPage = 10;
-		int cPage = 1;
+		//1. 사용자입력값 
+		int cpage = 1;
 		try {
-			cPage =	Integer.parseInt(request.getParameter("cPage"));
-		} catch (NumberFormatException e) {
-			// 처리 코드 없음. 기본값 1 유지.
+			cpage = Integer.parseInt(request.getParameter("cpage"));
+		} catch(NumberFormatException e) {
+			//예외가 발생한 경우, cpage는 1로 유지한다.
 		}
-		//2. 업무로직 : 전체회원 - 회원가입일 내림차순으로 조회
-		//cPage 1 : 1 ~ 10
-		//cPage 2 : 11 ~ 20
-		//cPage 3 : 21 ~ 30
-		int end = cPage * numPerPage;
-//		int start = end - (numPerPage - 1);
-		int start = (cPage -1) * numPerPage + 1;
-		List<Member> list = memberService.selectList(start, end);
-		System.out.println("list@servlet = " + list);
+		int numPerPage = 10;
 		
-		int totalContents = memberService.selectMemberCount();
+		//2. 업무로직
+		List<Member> list = adminService.selectList(cpage, numPerPage);//회원가입일 내림차순
+		System.out.println(list);
+		
+		//페이지바 처리
+		int totalContents = adminService.selectTotalMembers();
 		System.out.println("totalContents@servlet = " + totalContents);
+		String url = request.getRequestURI();
+		String pageBar = MvcUtils.getPageBar(totalContents, cpage, numPerPage, url);
+		System.out.println("pageBar@servlet = " + pageBar);
 		
-		//3. pageBar영역 작업
-		String url = request.getRequestURI(); // /mvc/admin/memberList
-		String pageBar = MvcUtils.getPageBar(
-					cPage,
-					numPerPage,
-					totalContents,
-					url
-				);
-		
-		//4. jsp에 html응답메세지 작성 위임
-		request.setAttribute("pageBar", pageBar);
+		//3. view단 처리 : forwarding
 		request.setAttribute("list", list);
+		request.setAttribute("pageBar", pageBar);
 		request.getRequestDispatcher("/WEB-INF/views/admin/memberList.jsp")
 			   .forward(request, response);
+		
 		
 	}
 
