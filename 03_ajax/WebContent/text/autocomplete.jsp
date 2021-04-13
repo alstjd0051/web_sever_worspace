@@ -16,8 +16,8 @@
 <div class="ui-widget">
   <label for="name">우리반 이름 : </label>
   <input id="name">
-  <h1 class="selected"></h1>
 </div>
+<h1 class="selected"></h1>
 <script>
 
 $("#name").autocomplete({
@@ -51,15 +51,16 @@ $("#name").autocomplete({
 		  }
 	  })
   },
-  select : function(event, selected) {
+  select: function(event, selected){
 	  console.log(event);
 	  console.log(selected);
 	  
 	  $("h1.selected").html(selected.item.label);
   },
-  focus: function(event, focused) {
+  focus: function(event, focused){
 	  return false;
   }
+  
 });
 
 </script>
