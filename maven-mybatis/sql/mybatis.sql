@@ -38,7 +38,7 @@ create synonym emp for kh.employee;
 create synonym dept for kh.department;
 create synonym job for kh.job;
 
-    select * from emp;
+select * from emp;
 select * from dept;
 select * from job;
 
@@ -51,5 +51,11 @@ grant select on kh.job to mybatis;
 
 grant create synonym to mybatis;
 --============================
+
+--직급코드가 J1, J2, J3인 사원조회
+
+
+
+
 
 
