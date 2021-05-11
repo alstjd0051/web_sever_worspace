@@ -39,9 +39,9 @@ public class EmpServiceImpl implements EmpService {
 	}
 
 	@Override
-	public List<Map<String, String>> selectJobList() {
+	public List<Map<String, Object>> selectJobList() {
 		SqlSession session = getSqlSession();
-		List<Map<String, String>> jobList = empDao.selectJobList(session);
+		List<Map<String, Object>> jobList = empDao.selectJobList(session);
 		session.close();
 		return jobList;
 	}
@@ -55,11 +55,37 @@ public class EmpServiceImpl implements EmpService {
 	}
 
 	@Override
-	public List<Map<String, String>> selectDeptList() {
+	public List<Map<String, Object>> selectDeptList() {
 		SqlSession session = getSqlSession();
-		List<Map<String, String>> deptList = empDao.selectDeptList(session);
+		List<Map<String, Object>> deptList = empDao.selectDeptList(session);
 		session.close();
 		return deptList;
+	}
+
+	@Override
+	public Map<String, Object> selectEmpOne(int empId) {
+		SqlSession session = getSqlSession();
+		Map <String, Object> list = empDao.selectEmpOne(session, empId);
+		session.commit();
+		session.close();
+		return list;
+	}
+
+	@Override
+	public int updateEmp(Map<String, Object> map) {
+		SqlSession session = getSqlSession();
+		int result = 0;
+		try {
+			result=empDao.updateEmp(session, map);
+			session.commit();
+		} catch (Exception e) {
+			session.rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			session.close();
+		}
+		return result;
 	}
 	
 	

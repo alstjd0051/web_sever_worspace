@@ -3,141 +3,157 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="emp">
-	<select id="selectAllEmp" resultType="map">
-		select
-			*
-		from
-			emp
-		order by 
-			emp_id
-	</select>
-	<!-- 
-		1. 테이블명, 컬럼명의 식별자를 표현 ${col} 
-		2. 데이터를 표현 #{value}
-	-->
-	<select id="search1" resultType="map">
-		select
-			*
-		from
-			emp
-		where
-			${searchType} like '%' || #{searchKeyword} || '%'
+	<select id="selectAllEmp" resultMap="empMap">
+		select * from emp order by emp_id
 	</select>
 	
-	<select id="search2" resultType="map">
-		select 
-			*
-		from (
-				select
-					e.*,
-					decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender
-				from 
-					emp e
-			) e
-		<!-- 
-			where태그 내부에 and/or 먼저오면 제거, 
-			where태그 몸통이 비었다면 where키워드 제거 
-		-->
-		<where> 
-			<if test="gender != null and gender != ''">
-			gender = #{gender}
-			</if>
-			<if test="searchType != null and searchType != ''">
-			and ${searchType} like '%' || #{searchKeyword} || '%'
-			</if>
-			<!-- 
+		<!--
+			1. 테이블명, 컬러몀ㅇ의 식별자를 표현 ${col}
+			2. 데이터를 표현 #{value}
+		 -->
+	<select id="search1" resultMap="empMap">
+		select * from emp where ${searchType} like '%' || #{searchKeyword} || '%'
+	</select>
+	
+	
+	<select id="search2" resultMap="empMap2">
+		select * from ( select e.*, decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender from emp e ) e
+	<!--  
+				where태그 내부에 and/or 먼저오면 제거, 
+				where태그 몸통이 비었다면 where키워드 제거 
+			 -->
+		<where>
+			<if test="gender != null and gender != ''"> gender = #{gender} </if>
+			<if test="searchType != null and searchType != ''"> and ${searchType} like '%' || #{searchKeyword} || '%' </if>
+			<!--  
 				CDATA Section
 				xml의 entity문자(예약문자) < > & 등을 문자그대로 사용하고 할때 사용.
 				<![CDATA[문자그대로 처리]]>
-			 -->
+			  -->
 			<if test="salary != null and salary != 0">
 				<if test="salaryCompare != null and salaryCompare != ''">
 					<choose>
-						<when test="salaryCompare == 'ge'">						
-							and salary <![CDATA[ >= ]]> #{salary}
+						<when test="salaryCompare == 'ge'">
+							and salary
+							<![CDATA[ >= ]]>
+							#{salary}
 						</when>
 						<when test="salaryCompare == 'le'">
-							and salary <![CDATA[ <= ]]> #{salary}						
+							and salary
+							<![CDATA[ <= ]]>
+							#{salary}
 						</when>
-						<otherwise></otherwise>
+						<otherwise/>
 					</choose>
 				</if>
 			</if>
-			<!-- 1. hire_date 문자열로 처리 -->
-			<!-- <if test="hire_date != null and hire_date != ''">
+			<!-- hireDate 문자열 처리 -->
+			<!-- <if test="hireDate != null and hireDate != ''">
 				<if test="hiredateCompare != null and hiredateCompare != ''">
 					<choose>
 						<when test="hiredateCompare eq 'ge'">
-							and hire_date <![CDATA[ >= ]]> to_date(#{hire_date}, 'yyyy-mm-dd') 
+							and hire_date <![CDATA[ >= ]]> to_date(#{hireDate},'yyyy-MM-dd')
 						</when>
 						<when test="hiredateCompare eq 'le'">
-							and hire_date <![CDATA[ <= ]]> to_date(#{hire_date}, 'yyyy-mm-dd') 						
+							and hire_date <![CDATA[ <= ]]> to_date(#{hireDate},'yyyy-MM-dd')
 						</when>
+						<otherwise/>
 					</choose>
 				</if>
 			</if> -->
-			<!-- 2. hireDate 날짜형으로 처리 -->
-			<if test="hireDate != null">
+			
+			<!-- hireDate 날짜형 처리 -->
+			<if test="hire_date != null">
 				<if test="hiredateCompare != null and hiredateCompare != ''">
 					<choose>
 						<when test="hiredateCompare eq 'ge'">
-							and hire_date <![CDATA[ >= ]]> #{hireDate} 
+							and hire_date <![CDATA[ >= ]]> #{hireDate}
 						</when>
 						<when test="hiredateCompare eq 'le'">
-							and hire_date <![CDATA[ <= ]]> #{hireDate} 						
+							and hire_date <![CDATA[ <= ]]> #{hireDate}
 						</when>
+						<otherwise/>
 					</choose>
 				</if>
 			</if>
 		</where>
 	</select>
-	<select id="selectJobList" resultType="map">
-		select 
-			job_code "jobCode",
-			job_name "jobName"
-		from 
-			job
+	<resultMap type="map" id="empMap">
+<!-- 		emp_id, emp_name, emp_no, email, phone, dept_code, job_code, sal_level, salary,
+		 bonus, manager_id, hire_date, quit_date, quit_yn -->
+		<id column="emp_id" property="empId"/>
+		<result column="emp_name" property="empName"/>
+		<result column="emp_no" property="empNo"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="sal_level" property="salLevel"/>
+		<result column="salary" property="salary"/>
+		<result column="bonus" property="bonus"/>
+		<result column="manager_id" property="managerId"/>
+		<result column="hire_date" property="hireDate"/>
+		<result column="quit_date" property="quitDate"/>
+		<result column="quit_yn" property="quitYN"/>
+		
+	</resultMap>
+	<resultMap type="map" id="empMap2">
+<!-- 		emp_id, emp_name, emp_no, email, phone, dept_code, job_code, sal_level, salary,
+		 bonus, manager_id, hire_date, quit_date, quit_yn -->
+		<id column="emp_id" property="empId"/>
+		<result column="emp_name" property="empName"/>
+		<result column="emp_no" property="empNo"/>
+		<result column="gender" property="gender"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="sal_level" property="salLevel"/>
+		<result column="salary" property="salary"/>
+		<result column="bonus" property="bonus"/>
+		<result column="manager_id" property="managerId"/>
+		<result column="hire_date" property="hireDate"/>
+		<result column="quit_date" property="quitDate"/>
+		<result column="quit_yn" property="quitYN"/>
+		
+	</resultMap>
+	
+	<select id="selectJobList" resultMap="job">
+		select * from job order by job_code asc
 	</select>
-	<select id="selectDeptList" resultType="map">
-		select 
-			dept_id "deptId",
-			dept_title "deptTitle"
-		from 
-			dept
-	</select>
+	<resultMap type="map" id="job">
+		<id column="job_code" property="jobCode"/>
+		<result column="job_name" property="jobName"/>
+	</resultMap>
+	
 	<select id="search3" resultType="map">
-		select 
-			*
-		from (
-				select
-					e.*,
-					decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender,
-					d.dept_title,
-					j.job_name
-				from 
-					emp e
-					  left join dept d
-					  	on e.dept_code = d.dept_id
-					  left join job j
-					  	on e.job_code = j.job_code
-			) e
+		select * from ( select e.*, decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender, nvl(d.dept_title,'인턴') dept_title, j.job_name from emp e left join dept d on e.dept_code = d.dept_id left join job j on e.job_code = j.job_code ) e
 		<where>
 			<if test="jobCodeArr != null">
-			job_code in 
-				<foreach 
-					collection="jobCodeArr" item="jobCode" 
-					open="(" close=")" separator=",">
-					#{jobCode}
-				</foreach>
+				job_code in
+				<foreach collection="jobCodeArr" item="jobCode" open="(" close=")" separator=","> #{jobCode} </foreach>
 			</if>
-			<if test="deptIdList != null">
-			and nvl(dept_code, 'D0') in
-				<foreach 
-					collection="deptIdList" item="deptId"
-					open="(" close=")" separator=",">
-					#{deptId}
-				</foreach>
+			<if test="deptCodeArr != null">
+				and nvl(dept_code,'D0') in
+				<foreach collection="deptCodeArr" item="deptCode" open="(" close=")" separator=",">#{deptCode}</foreach>
 			</if>
 		</where>
 	</select>
+	
+	<select id="selectDeptList" resultType="map">
+		select dept_id "deptId", dept_title "deptTitle" from dept order by dept_id asc
+	</select>
+	
+	<select  id="selectEmpOne" resultType="map">
+		select * from ( select e.*, decode(substr(emp_no, 8, 1), '1', '남', '3', '남', '여') gender, nvl(d.dept_title,'인턴') dept_title, j.job_name from emp e left join dept d on e.dept_code = d.dept_id left join job j on e.job_code = j.job_code ) e where emp_id=#{empId}
+	</select>
+	
+	<update id="updateEmp">
+		update emp
+		<set>
+			<if test="jobCode != null">job_code = #{jobCode},</if>
+			<if test="deptCode != null">dept_code = #{deptCode}</if>
+		</set>
+		where emp_id = #{empId}
+	</update>
 </mapper>
