@@ -25,7 +25,7 @@
 	pageContext.setAttribute("p2", p2);
 	pageContext.setAttribute("list", list);
 	
-	pageContext.setAttribute("emptyStr", null);
+	pageContext.setAttribute("emptyStr", "");
 %>    
 <!DOCTYPE html>
 <html>
@@ -63,8 +63,12 @@
 	<p>${p1 == p2} ${p1 eq p2}</p>
 
 	<!-- 객체가 null이거나 요소가 없는지 여부 -->
-	<p>${empty list} ${not empty list }</p>
-	<p>${empty emptyStr} ${not empty emptyStr }</p>
+	<p>${empty list} ${not empty list}</p>
+	<p>${empty emptyStr} ${not empty emptyStr}</p>
+
+	
+
+
 <br />
 <br />
 <br />

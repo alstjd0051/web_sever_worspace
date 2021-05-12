@@ -70,20 +70,21 @@
 	
 	<p>${header['user-agent']}</p>
 	
+	
 	<h1>pageContext</h1>
 	<!-- 
 		getPage()
 		getRequest()
-			getMethod() : GET|POST
-			goetContextPath() : /action
+			getMethod(): GET|POST
+			getContextPath(): /action
 		getResponse()
 		getSession()
 		getServletContext()
 		getErrorData()
 	 -->
-	<p>${pageContext.request.method}</p>
-	<p>${pageContext.request.contextPath}</p>
-	
+	 <p>${pageContext.request.method}</p>
+	 <p>${pageContext.request.contextPath}</p>
+		
 	<br />
 	<br />
 	<br />
@@ -106,5 +107,6 @@
 	<br />
 </body>
 </html>
+
 
 

@@ -7,12 +7,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.oreilly.servlet.multipart.FileRenamePolicy;
 
 import board.model.service.BoardService;
+import board.model.vo.Attachment;
 import board.model.vo.Board;
 import common.MvcFileRenamePolicy;
 
@@ -25,82 +26,96 @@ public class BoardEnrollServlet extends HttpServlet {
 	private BoardService boardService = new BoardService();
 	
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/WEB-INF/views/board/boardEnroll.jsp")
-			   .forward(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * 0. form의 속성 enctype="multipart/form-data" 추가
+	 * 1. MultipartRequest객체 생성 : 서버컴퓨터 파일 저장 
+	 * 		- request
+	 * 		- 저장경로
+	 * 		- encoding
+	 * 		- 최대허용크기
+	 * 		- 파일명 변경정책 객체
+	 * 2. db에 파일정보를 저장 
+	 * 		- 사용자가 저장한 파일명 original_filename
+	 * 		- 실제 저장된 파일명 renamed_filename
+	 * 
+	 * MultipartRequest객체를 사용하면, 
+	 * 기존 HttpServletRequest에서는 사용자입력값에 접근할 수 없다.
+	 * 
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		/* 파일이 포함된 사용자 요청 처리 MultipartRequest객체 생성 */
-		/*
-		 new MultipartRequest(
-		 			HttpServletRequest request, 
-		 			String saveDirectory, 		//업로드파일의 저장경로(절대경로)
-		 			int maxPostSize, 			//최대크기제한 10mb
-		 			String encoding, 			//인코딩
-		 			FileRenamePolicy policy 	//파일이름 재지정 정책 객체
-		 		)
-		 */
-		//application : WAS실행시부터 종료시까지 운영되는 객체
-		String saveDirectory = getServletContext().getRealPath("/upload/board");// / -> Web Root Directory
-		System.out.println("saveDirectory@BoardEnrollServlet = " + saveDirectory);
-		
-		//byte단위 : 1mb = 1kb * 1kb
-		int maxPostSize = 10 * 1024 * 1024;
-		
-		String encoding = "utf-8";
-		
-		//중복파일에 대해서 number부여
-//		FileRenamePolicy policy = new DefaultFileRenamePolicy();
-		FileRenamePolicy policy = new MvcFileRenamePolicy();
-		
-		//MultipartRequest객체 생성
-		MultipartRequest multipartReq = 
-				new MultipartRequest(request, saveDirectory, maxPostSize, encoding, policy);
-		
-		//MultipartRequest를 사용하면, 기존 request로 부터 사용자 입력값을 가져올 수 없다.
-		//1.사용자 입력값으로 Board객체 생성 
-		//boardTitle boardWriter boardContent
-		String boardTitle = multipartReq.getParameter("boardTitle");
-		String boardWriter= multipartReq.getParameter("boardWriter");
-		String boardContent = multipartReq.getParameter("boardContent");
-		String boardOriginalFileName = multipartReq.getOriginalFileName("upFile");
-		String boardRenamedFileName = multipartReq.getFilesystemName("upFile");
-		
-		Board board = 
-				new Board(0, boardTitle, boardWriter, 
-						boardContent, boardOriginalFileName, boardRenamedFileName, 
-						null, 0);
-		System.out.println("board-before@servlet = " + board);
-		
-		//2. 업무로직 : Board객체 db저장 요청
-		//DML처리결과는  int타입
-		int result = boardService.insertBoard(board);
-		System.out.println("board-after@servlet = " + board);
-		
-		String msg = result > 0 ? "게시글 등록 성공!" : "게시글 등록 실패!"; 
-		//board.getBoardNo()를 통해서 새로 등록된 게시글 번호 가져오기
-		String location = result > 0 ?
-							request.getContextPath() + "/board/boardView?boardNo=" + board.getBoardNo() : 
-								request.getContextPath() + "/board/boardList";
-							
-				
-		//3.사용자 피드백(msg) 및 redirect처리 (/mvc/board/boardList)
-		//DML이후 반드시 요청url을 변경할 것
-		request.getSession().setAttribute("msg", msg);
-		response.sendRedirect(location);
-		
+		try {
+			//1. MultipartRequest객체 생성
+			// /WebContent/upload/board/업로드파일명.jpg 
+			// web rool dir를 절대경로로 반환
+			String saveDirectory = getServletContext().getRealPath("/upload/board");
+			System.out.println("saveDirectory@servlet = " + saveDirectory);
+			
+			//최대파일허용크기 10mb = 10 * 1kb * 1kb
+			int maxPostSize = 10 * 1024 * 1024;
+			
+			//인코딩
+			String encoding = "utf-8";
+			
+			//파일명 변경정책 객체
+			//중복파일인 경우, numbering처리
+			//filerename : 20210406191919_123.jpg
+	//		FileRenamePolicy policy = new DefaultFileRenamePolicy();
+			FileRenamePolicy policy = new MvcFileRenamePolicy();
+			
+			MultipartRequest multipartRequest = 
+					new MultipartRequest(
+									request, 
+									saveDirectory, 
+									maxPostSize, 
+									encoding, 
+									policy
+								);
+			
+			//2. db에 게시글/첨부파일 정보 저장
+			
+			//2-1. 사용자 입력값처리
+			String title = multipartRequest.getParameter("title");
+			String  writer = multipartRequest.getParameter("writer");
+			String content = multipartRequest.getParameter("content");
+			
+			//업로드한 파일명
+			String originalFileName = multipartRequest.getOriginalFileName("upFile");
+			String renamedFileName = multipartRequest.getFilesystemName("upFile");
+			
+	//		Board board = new Board(0, title, writer, content, null, 0, null);
+			Board board = new Board();
+			board.setTitle(title);
+			board.setWriter(writer);
+			board.setContent(content);
+			
+			//첨부파일이 있는 경우
+			//multipartRequest.getFile("upFile"):File != null
+			if(originalFileName != null) {
+				Attachment attach = new Attachment();
+				attach.setOriginalFileName(originalFileName);
+				attach.setRenamedFileName(renamedFileName);
+				board.setAttach(attach);
+			}
+			
+			//2. 업무로직 : db에 insert
+			int result = boardService.insertBoard(board);
+			String msg = (result > 0) ? 
+							"게시글 등록 성공!" :
+								"게시글 등록 실패!";
+			String location = request.getContextPath();
+			location += (result > 0) ?
+							"/board/boardView?no=" + board.getNo() : 
+								"/board/boardList";
+			
+			//3. DML요청 : 리다이렉트 & 사용자피드백
+			// /mvc/board/boardList
+			HttpSession session = request.getSession();
+			session.setAttribute("msg", msg);
+			response.sendRedirect(location);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e; // was한테 다시 던져서 에러페이지로 전환함.
+		}
 	}
 
 }
-
-
-
-
-

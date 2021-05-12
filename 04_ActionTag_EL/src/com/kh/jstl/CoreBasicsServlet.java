@@ -29,7 +29,7 @@ public class CoreBasicsServlet extends HttpServlet {
 		List<Person> list = Arrays.asList(
 					new Person("honggd", "홍길동", '남', 35, true),
 					new Person("sinsa", "신사임당", '여', 58, true),
-					new Person("ygs123", "유관순", '여', 20, false)				
+					new Person("ygs123", "유관순", '여', 16, false)				
 				);
 		request.setAttribute("personList", list);
 		
@@ -44,3 +44,10 @@ public class CoreBasicsServlet extends HttpServlet {
 	}
 
 }
+
+
+
+
+
+
+

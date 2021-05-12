@@ -19,38 +19,26 @@ import member.model.vo.Member;
 /**
  * Servlet Filter implementation class AdminFilter
  */
-@WebFilter("/admin/*")
+//@WebFilter("/admin/*")
 public class AdminFilter implements Filter {
 
-    /**
-     * Default constructor. 
-     */
-    public AdminFilter() {
-        // TODO Auto-generated constructor stub
-    }
-
 	/**
-	 * @see Filter#destroy()
-	 */
-	public void destroy() {
-		// TODO Auto-generated method stub
-	}
-
-	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+	 * 관리자가 아닌 부정요청에 대한 처리
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		//관리자가 아닌 부정요청에 대한 처리
 		HttpServletRequest httpReq = (HttpServletRequest)request;
+		HttpServletResponse httpRes = (HttpServletResponse)response;
 		HttpSession session = httpReq.getSession();
-		Member memberLoggedIn = ((Member)session.getAttribute("memberLoggedIn"));
 		
-		if(memberLoggedIn==null || !MemberService.ADMIN_MEMBER_ROLE.equals(memberLoggedIn.getMemberRole())){
-			session.setAttribute("msg", "잘못된 경로로 접근하셨습니다.");
-			((HttpServletResponse)response).sendRedirect(httpReq.getContextPath());
+		Member loginMember = ((Member)session.getAttribute("loginMember"));
+		//System.out.println("[관리자 권한 페이지 요청 @AdminFilter]");
+		
+		if(loginMember == null || !MemberService.ADMIN_ROLE.equals(loginMember.getMemberRole())){
+			session.setAttribute("msg", "관리자만 사용가능합니다.");
+			httpRes.sendRedirect(httpReq.getContextPath());
 			return;
 		}
-		
+		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}
 

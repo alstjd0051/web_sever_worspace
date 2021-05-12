@@ -1,32 +1,24 @@
 package member.model.service;
 
-import java.sql.Connection;
-
-import common.JDBCTemplate;
-import member.model.dao.MemberDao;
-import member.model.vo.Member;
 import static common.JDBCTemplate.*;
 
-/**
- * Connection객체생성
- * Dao에 업무로직 하달
- * 트랜잭션처리
- * 자원반납
- */
+import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
+
+import member.model.dao.MemberDao;
+import member.model.vo.Member;
+
 public class MemberService {
-	
-	public static final String ADMIN_MEMBER_ROLE = "A";//관리자 롤
-	public static final String USER_MEMBER_ROLE = "U";//일반사용자 롤
-	
+
 	private MemberDao memberDao = new MemberDao();
 
+	public static final String MEMBER_ROLE = "U";
+	public static final String ADMIN_ROLE = "A";
+	
 	public Member selectOne(String memberId) {
-		//1.Connection객체 생성
 		Connection conn = getConnection();
-		//2.dao요청
-		Member member =  memberDao.selectOne(conn, memberId);
-		//3.트랜잭션관리(DML만)
-		//4.자원반납
+		Member member = memberDao.selectOne(conn, memberId);
 		close(conn);
 		return member;
 	}
@@ -42,7 +34,7 @@ public class MemberService {
 		return result;
 	}
 	
-	public int updateMember(Member member) {
+    public int updateMember(Member member) {
 		Connection conn = getConnection();
 		int result = memberDao.updateMember(conn, member);
 		if(result>0)
@@ -52,9 +44,8 @@ public class MemberService {
 		close(conn);
 		return result;
 	}
-	
-	
-	public int deleteMember(String memberId) {
+    
+    public int deleteMember(String memberId) {
 		Connection conn = getConnection();
 		int result = memberDao.deleteMember(conn, memberId);
 		if(result>0)
@@ -64,7 +55,7 @@ public class MemberService {
 		close(conn);
 		return result;
 	}
-	
+
 	public int updatePassword(Member member) {
 		Connection conn = getConnection();
 		int result = memberDao.updatePassword(conn, member);
@@ -76,7 +67,53 @@ public class MemberService {
 		return result;
 	}
 
+	public List<Member> selectList() {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.selectList(conn);
+		close(conn);
+		return list;
+	}
+	
+	public List<Member> selectList(int start, int end) {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.selectList(conn, start, end);
+		close(conn);
+		return list;
+	}
 
+	public int updateMemberRole(Member member) {
+		Connection conn = getConnection();
+		int result = memberDao.updateMemberRole(conn, member);
+		if(result>0)
+			commit(conn);
+		else 
+			rollback(conn);
+		close(conn);
+		return result;
+	}
+
+	public List<Member> searchMember(Map<String, String> param) {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.searchMember(conn, param);
+		close(conn);
+		return list;
+	}
+
+	public int selectMemberCount() {
+		Connection conn = getConnection();
+		int totalContents = memberDao.selectMemberCount(conn);
+		close(conn);
+		return totalContents;
+	}
+
+	public int searchMemberCount(Map<String, String> param) {
+		Connection conn = getConnection();
+		int totalContents = memberDao.searchMemberCount(conn, param);
+		close(conn);
+		return totalContents;
+	}
+
+	
 
 
 }

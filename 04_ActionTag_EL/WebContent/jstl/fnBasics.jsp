@@ -35,9 +35,8 @@
 	
 	<p>${fn:replace(str1, 'Hello', 'Goodbye')}</p>
 	
-	<c:set var="badScript"><script>document.body.style.color = "skyblue";</script></c:set>
-	<!--  ${badScript} -->
-	${fn:escapeXml(badScript)} <!-- xss -->
+	<c:set var="badScript"><script>document.body.style.color = "red";</script></c:set>
+	${fn:escapeXml(badScript)}
 	
 	
 	

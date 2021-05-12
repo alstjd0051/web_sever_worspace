@@ -37,14 +37,14 @@ public class ElBasicsServlet extends HttpServlet {
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("language", "Java");
-		map.put("Dr.zang", new Person("zangys", "영실", '남', 45, false));
+		map.put("Dr.zang", new Person("zangys", "장영실", '남', 45, false));
 		request.setAttribute("map", map);
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("book", "디지털 미니멀리즘");
 		
 		ServletContext application = request.getServletContext();
-		application.setAttribute("movie", "버킷리스트");
+		application.setAttribute("movie", "귀멸의 칼날 - 무한열차");
 		
 		request.getRequestDispatcher("/el/elBasics.jsp")
 			   .forward(request, response);

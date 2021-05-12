@@ -10,49 +10,36 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Servlet Filter implementation class LoggerFilter
- */
-//@WebFilter("/LoggerFilter")
 public class LoggerFilter implements Filter {
 
-    /**
-     * Default constructor. 
-     */
-    public LoggerFilter() {
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see Filter#destroy()
-	 */
-	public void destroy() {
-		// TODO Auto-generated method stub
+	
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		System.out.println("LoggerFilter의 init 메소드호출!");
 	}
 
-	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		//서블릿 가기전
+	@Override
+	public void destroy() {
+		System.out.println("LoggerFilter의 destroy 메소드호출!");
+	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		//1. servlet 호출전
+		System.out.println("\n===================================");
 		HttpServletRequest httpReq = (HttpServletRequest)request;
 		String uri = httpReq.getRequestURI();
-		System.out.println("=======================================");
 		System.out.println(uri);
-		System.out.println("---------------------------------------");
+		System.out.println("-------------------------------------");
 		
+		//다음 filterChain객체를 호출
+		//다음 filter객체가 존재하지 않으면, servlet호출
 		chain.doFilter(request, response);
 		
-		//서블릿 종료후
-		System.out.println("_______________________________________");
-		System.out.println();
-	}
+		//2. servlet/jsp 처리이후
+		System.out.println("______________________________________");
 
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
-	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
 	}
 
 }

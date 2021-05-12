@@ -8,7 +8,7 @@
 		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus dolorum accusantium dolorem assumenda quas eveniet nihil obcaecati repudiandae iste dolores doloremque voluptatem ea in temporibus fugit illo vitae nesciunt vero.</p>
 		<script>
 		$(function(){
-		$("h1").css("color", "skyblue");
+			$("h1").css("color", "deeppink");
 		});
 		</script>
 <%@ include file="/jsp/footer.jsp" %>

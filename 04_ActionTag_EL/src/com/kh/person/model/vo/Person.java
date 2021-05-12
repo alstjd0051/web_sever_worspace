@@ -25,6 +25,39 @@ public class Person {
 	public String getId() {
 		return id;
 	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public char getGender() {
+		return gender;
+	}
+	public void setGender(char gender) {
+		this.gender = gender;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public boolean isMarried() {
+		return married;
+	}
+	public void setMarried(boolean married) {
+		this.married = married;
+	}
+	@Override
+	public String toString() {
+		return "Person [id=" + id + ", name=" + name + ", gender=" + gender + ", age=" + age + ", married=" + married
+				+ "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -63,39 +96,6 @@ public class Person {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public char getGender() {
-		return gender;
-	}
-	public void setGender(char gender) {
-		this.gender = gender;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public boolean isMarried() {
-		return married;
-	}
-	public void setMarried(boolean married) {
-		this.married = married;
-	}
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", gender=" + gender + ", age=" + age + ", married=" + married
-				+ "]";
 	}
 	
 	

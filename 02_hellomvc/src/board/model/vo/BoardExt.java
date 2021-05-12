@@ -1,40 +1,49 @@
 package board.model.vo;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class BoardExt extends Board {
-
-	private int boardCommentCount;
+public class BoardExt extends Board implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private int commentCnt;
 
 	public BoardExt() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public BoardExt(int boardNo, String boardTitle, String boardWriter, String boardContent,
-			String boardOriginalFileName, String boardRenamedFileName, Date boardDate, int boardReadCount, 
-			int boardCommentCount) {
-		super(boardNo, boardTitle, boardWriter, boardContent, boardOriginalFileName, boardRenamedFileName, boardDate,
-				boardReadCount);
-		this.boardCommentCount = boardCommentCount;
+	public BoardExt(int no, String title, String writer, String content, Date regDate, int readCount, Attachment attach,
+			int commentCnt) {
+		super(no, title, writer, content, regDate, readCount, attach);
+		this.commentCnt = commentCnt;
 	}
 
-	public int getBoardCommentCount() {
-		return boardCommentCount;
+
+
+	public int getCommentCnt() {
+		return commentCnt;
 	}
 
-	public void setBoardCommentCount(int boardCommentCount) {
-		this.boardCommentCount = boardCommentCount;
+	public void setCommentCnt(int commentCnt) {
+		this.commentCnt = commentCnt;
 	}
 
 	@Override
 	public String toString() {
-		return "BoardExt [boardCommentCount=" + boardCommentCount + ", toString()=" + super.toString() + "]";
+		return "BoardExt [commentCnt=" + commentCnt + ", Board=" + super.toString() + "]";
 	}
+
+	
+	
+
+
 	
 	
 	
-	
-	
-	
+
 }

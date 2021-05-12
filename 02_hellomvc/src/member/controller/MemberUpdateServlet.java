@@ -17,22 +17,25 @@ import member.model.vo.Member;
 /**
  * Servlet implementation class MemberUpdateServlet
  */
-@WebServlet(name="MemberUpdateServlet", urlPatterns="/member/memberUpdate")
+@WebServlet("/member/memberUpdate")
 public class MemberUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private MemberService memberService = new MemberService();
-
+	
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1.전송값에 한글이 있을 경우 인코딩처리해야함.
+		//1.한글 깨짐 방지 인코딩처리
 		//void javax.servlet.ServletRequest.setCharacterEncoding(String arg0) throws UnsupportedEncodingException
 		request.setCharacterEncoding("UTF-8");//대소문자 상관없음. 요청한 view단의 charset값과 동일해야 한다.
 		
-		//2.전송값 꺼내서 변수에 기록하기.
+		//2.사용자 입력값 처리
 		//String javax.servlet.ServletRequest.getParameter(String arg0)
 		String memberId = request.getParameter("memberId");
 		String password = request.getParameter("password");
 		String memberName = request.getParameter("memberName");
-		String birthDay = request.getParameter("birthDay");
+		String _birthday = request.getParameter("birthday");
 		String gender = request.getParameter("gender");
 		String email = request.getParameter("email");
 		String phone = request.getParameter("phone");
@@ -44,42 +47,36 @@ public class MemberUpdateServlet extends HttpServlet {
 		
 		String hobby = "";
 		//String java.lang.String.join(CharSequence delimiter, CharSequence... elements)
-		//파라미터로 전달한 문자열배열이 null이면, NullPointerException유발.
-		if(hobbies!=null) hobby = String.join(",", hobbies);
+		//hobbies가 null이면, NullPointerException유발.
+		if(hobbies != null) 
+			hobby = String.join(",", hobbies);
 
 		//날짜타입으로 변경 : 1990-09-09
-		Date birthDay_ = null;
-		if(birthDay != null && !"".equals(birthDay))
-			birthDay_ = Date.valueOf(birthDay);
+		Date birthday = null;
+		if(_birthday != null && !"".equals(_birthday))
+			birthday = Date.valueOf(_birthday);
 		
-		Member member = new Member(memberId, password, memberName, "U", gender, birthDay_, email, phone, address, hobby, null);
-
-		System.out.println("입력한 회원정보 : "+member);
+		Member member = new Member(memberId, password, memberName, null, gender, birthday, email, phone, address, hobby, null);
+		System.out.println("member@servlet = " + member);
 		
-		//3.서비스로직호출
+		//3.업무로직
 		int result = memberService.updateMember(member);  
-		
-		//4. 받은 결과에 따라 뷰페이지 내보내기
-//		String view = "/index.jsp";
-		String msg = null;
-		String loc = request.getContextPath() + "/member/memberView?memberId=" + member.getMemberId();
+
+		//4. 사용자피드백 및 리다이렉트 처리
 		HttpSession session = request.getSession();
-		if(result>0){
+		String msg = "";
+
+		if(result > 0){
 			msg = "성공적으로 회원정보를 수정했습니다.";
-			
-			//세션의 memberLoggedIn객체도 최신화
-			session.setAttribute("memberLoggedIn", memberService.selectOne(memberId));
+			//세션의 정보도 갱신
+			session.setAttribute("loginMember", memberService.selectOne(memberId));
 		}
-		else {
+		else 
 			msg = "회원정보수정에 실패했습니다.";	
-		}
 		
 		session.setAttribute("msg", msg);
-		
-		
-		response.sendRedirect(loc);
-//		RequestDispatcher reqDispatcher = request.getRequestDispatcher(view);
-//		reqDispatcher.forward(request, response);
+		response.sendRedirect(request.getContextPath() + "/member/memberView");
 	}
+
 
 }

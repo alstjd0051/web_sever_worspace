@@ -4,110 +4,84 @@ import java.sql.Date;
 
 /**
  * 
- * BOARD테이블의 한행과 Board객체가 매핑된다.
+ * VO객체  ------- 행(레코드)
+ * 필드      ------- 컬럼  
  *
  */
 public class Board {
-	private int boardNo;
-	private String boardTitle;
-	private String boardWriter;
-	private String boardContent;
-	private String boardOriginalFileName;
-	private String boardRenamedFileName;
-	private Date boardDate;
-	private int boardReadCount;
+	
+	private int no;
+	private String title;
+	private String writer;
+	private String content;
+	private Date regDate;
+	private int readCount;
+	private Attachment attach;
 	
 	public Board() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Board(int boardNo, String boardTitle, String boardWriter, String boardContent, String boardOriginalFileName,
-			String boardRenamedFileName, Date boardDate, int boardReadCount) {
+	
+	public Board(int no, String title, String writer, String content, Date regDate, int readCount, Attachment attach) {
 		super();
-		this.boardNo = boardNo;
-		this.boardTitle = boardTitle;
-		this.boardWriter = boardWriter;
-		this.boardContent = boardContent;
-		this.boardOriginalFileName = boardOriginalFileName;
-		this.boardRenamedFileName = boardRenamedFileName;
-		this.boardDate = boardDate;
-		this.boardReadCount = boardReadCount;
+		this.no = no;
+		this.title = title;
+		this.writer = writer;
+		this.content = content;
+		this.regDate = regDate;
+		this.readCount = readCount;
+		this.attach = attach;
 	}
 
-	public int getBoardNo() {
-		return boardNo;
+	public int getNo() {
+		return no;
 	}
-
-	public void setBoardNo(int boardNo) {
-		this.boardNo = boardNo;
+	public void setNo(int no) {
+		this.no = no;
 	}
-
-	public String getBoardTitle() {
-		return boardTitle;
+	public String getTitle() {
+		return title;
 	}
-
-	public void setBoardTitle(String boardTitle) {
-		this.boardTitle = boardTitle;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-
-	public String getBoardWriter() {
-		return boardWriter;
+	public String getWriter() {
+		return writer;
 	}
-
-	public void setBoardWriter(String boardWriter) {
-		this.boardWriter = boardWriter;
+	public void setWriter(String writer) {
+		this.writer = writer;
 	}
-
-	public String getBoardContent() {
-		return boardContent;
+	public String getContent() {
+		return content;
 	}
-
-	public void setBoardContent(String boardContent) {
-		this.boardContent = boardContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
-
-	public String getBoardOriginalFileName() {
-		return boardOriginalFileName;
+	public Date getRegDate() {
+		return regDate;
 	}
-
-	public void setBoardOriginalFileName(String boardOriginalFileName) {
-		this.boardOriginalFileName = boardOriginalFileName;
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
 	}
-
-	public String getBoardRenamedFileName() {
-		return boardRenamedFileName;
+	public int getReadCount() {
+		return readCount;
 	}
-
-	public void setBoardRenamedFileName(String boardRenamedFileName) {
-		this.boardRenamedFileName = boardRenamedFileName;
+	public void setReadCount(int readCount) {
+		this.readCount = readCount;
 	}
-
-	public Date getBoardDate() {
-		return boardDate;
+	public Attachment getAttach() {
+		return attach;
 	}
-
-	public void setBoardDate(Date boardDate) {
-		this.boardDate = boardDate;
-	}
-
-	public int getBoardReadCount() {
-		return boardReadCount;
-	}
-
-	public void setBoardReadCount(int boardReadCount) {
-		this.boardReadCount = boardReadCount;
+	public void setAttach(Attachment attach) {
+		this.attach = attach;
 	}
 
 	@Override
 	public String toString() {
-		return "Board [boardNo=" + boardNo + ", boardTitle=" + boardTitle + ", boardWriter=" + boardWriter
-				+ ", boardContent=" + boardContent + ", boardOriginalFileName=" + boardOriginalFileName
-				+ ", boardRenamedFileName=" + boardRenamedFileName + ", boardDate=" + boardDate + ", boardReadCount="
-				+ boardReadCount + "]";
+		return "Board [no=" + no + ", title=" + title + ", writer=" + writer + ", content=" + content + ", regDate="
+				+ regDate + ", readCount=" + readCount + ", attach=" + attach + "]";
 	}
-
-	
 	
 	
 }
