@@ -37,11 +37,11 @@ public class EmpSearchController3 extends AbstractController {
 			
 			//2. 업무로직
 			//jobList조회(job_code, job_name)
-			List<Map<String, Object>> jobList = empService.selectJobList();
+			List<Map<String, String>> jobList = empService.selectJobList();
 			System.out.println("jobList@controller = " + jobList);
 
 			//deptList조회(dept_code, dept_title)
-			List<Map<String, Object>> deptList = empService.selectDeptList();
+			List<Map<String, String>> deptList = empService.selectDeptList();
 			System.out.println("deptList@controller = " + deptList);
 			
 			List<Map<String, Object>> list = empService.search3(param);
