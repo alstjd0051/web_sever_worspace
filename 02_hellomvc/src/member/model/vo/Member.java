@@ -6,11 +6,11 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 /**
- * 
  * VO클래스
  * 
- * DB테이블의 한행의 정보를 가지고 있는 객체
+ * DB테이블의 '한 행'의 정보를 가지고 있는 객체
  */
+
 public class Member implements HttpSessionBindingListener {
 	
 	private String memberId;
@@ -18,7 +18,7 @@ public class Member implements HttpSessionBindingListener {
 	private String memberName;
 	private String memberRole;
 	private String gender;
-	private Date birthday;
+	private Date birthday; //시분초 정보 필요하면 timestamp써야한다
 	private String email;
 	private String phone;
 	private String address;
@@ -29,6 +29,7 @@ public class Member implements HttpSessionBindingListener {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 	public Member(String memberId, String password, String memberName, String memberRole, String gender, Date birthday,
 			String email, String phone, String address, String hobby, Date enrollDate) {
 		super();
@@ -44,6 +45,7 @@ public class Member implements HttpSessionBindingListener {
 		this.hobby = hobby;
 		this.enrollDate = enrollDate;
 	}
+	
 	public String getMemberId() {
 		return memberId;
 	}
@@ -110,6 +112,7 @@ public class Member implements HttpSessionBindingListener {
 	public void setEnrollDate(Date enrollDate) {
 		this.enrollDate = enrollDate;
 	}
+	
 	@Override
 	public String toString() {
 		return "Member [memberId=" + memberId + ", password=" + password + ", memberName=" + memberName
@@ -117,21 +120,23 @@ public class Member implements HttpSessionBindingListener {
 				+ ", phone=" + phone + ", address=" + address + ", hobby=" + hobby + ", enrollDate=" + enrollDate + "]";
 	}
 	
-	/**
-	 * Session객체에 현재객체가 속성으로 등록될때 호출되는 event listener
+	/*
+	 * Session객체에 현재 vo객체가 속성으로 등록될 때 호출되는 event listener
+	 * ex) 로그인할 때 session.setAttribute("loginMember", member);
 	 */
 	@Override
 	public void valueBound(HttpSessionBindingEvent ev) {
-		System.out.println(memberName + "[" + memberId + "]님이 로그인 했습니다.");
+		System.out.println(memberName + "[" + memberId + "] 님이 로그인했습니다.");
 	}
 	
-	/**
-	 * Session객체에 현재객체가 속성에서 해제 될때 호출되는 event listener
-	 * session이 무효화될때도 호출.
+	/*
+	 * Session객체에 현재 vo객체가 속성에서 해제될 때 호출되는 event listener
+	 * session이 무효화될 때에도 호출
 	 */
 	@Override
 	public void valueUnbound(HttpSessionBindingEvent ev) {
-		System.out.println(memberName + "[" + memberId + "]님이 로그아웃 했습니다.");
+		System.out.println(memberName + "[" + memberId + "] 님이 로그아웃했습니다.");
+		
 	}
 	
 }

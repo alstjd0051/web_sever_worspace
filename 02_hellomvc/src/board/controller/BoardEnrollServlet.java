@@ -24,29 +24,17 @@ import common.MvcFileRenamePolicy;
 public class BoardEnrollServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BoardService boardService = new BoardService();
-	
+
 	/**
 	 * 0. form의 속성 enctype="multipart/form-data" 추가
-	 * 1. MultipartRequest객체 생성 : 서버컴퓨터 파일 저장 
-	 * 		- request
-	 * 		- 저장경로
-	 * 		- encoding
-	 * 		- 최대허용크기
-	 * 		- 파일명 변경정책 객체
-	 * 2. db에 파일정보를 저장 
-	 * 		- 사용자가 저장한 파일명 original_filename
-	 * 		- 실제 저장된 파일명 renamed_filename
-	 * 
-	 * MultipartRequest객체를 사용하면, 
-	 * 기존 HttpServletRequest에서는 사용자입력값에 접근할 수 없다.
-	 * 
+	 * 1. MultipartRequest객체 생성
+	 * 게시글 등록 성공 시 바로 상세보기 페이지로 이동할 것
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		try {
-			//1. MultipartRequest객체 생성
-			// /WebContent/upload/board/업로드파일명.jpg 
-			// web rool dir를 절대경로로 반환
+			//1. MultipartRequest 객체 생성
+			//  /WebContent/upload/board/업로드파일명.jpg
+			// web root directory를 절대경로로 반환해준다. (맨왼쪽 슬래쉬=WebContent)
 			String saveDirectory = getServletContext().getRealPath("/upload/board");
 			System.out.println("saveDirectory@servlet = " + saveDirectory);
 			
@@ -56,33 +44,31 @@ public class BoardEnrollServlet extends HttpServlet {
 			//인코딩
 			String encoding = "utf-8";
 			
-			//파일명 변경정책 객체
-			//중복파일인 경우, numbering처리
+			//파일명 변경 정책 객체
+			//중복 파일인 경우, 넘버링 처리
 			//filerename : 20210406191919_123.jpg
 	//		FileRenamePolicy policy = new DefaultFileRenamePolicy();
 			FileRenamePolicy policy = new MvcFileRenamePolicy();
 			
-			MultipartRequest multipartRequest = 
-					new MultipartRequest(
-									request, 
-									saveDirectory, 
-									maxPostSize, 
-									encoding, 
-									policy
-								);
+			MultipartRequest multipartRequest = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, policy);
 			
-			//2. db에 게시글/첨부파일 정보 저장
 			
-			//2-1. 사용자 입력값처리
+			//2. DB에 게시글/첨부파일 정보 저장
+			
+			//2-1. 사용자 입력값 처리(request -> multipartRequest)
+	//		String title = request.getParameter("title");
+	//		String writer = request.getParameter("writer");
+	//		String content = request.getParameter("content");
 			String title = multipartRequest.getParameter("title");
-			String  writer = multipartRequest.getParameter("writer");
+			String writer = multipartRequest.getParameter("writer");
 			String content = multipartRequest.getParameter("content");
 			
 			//업로드한 파일명
+			//파라미터 : html에서 업로드 인풋의 name
 			String originalFileName = multipartRequest.getOriginalFileName("upFile");
-			String renamedFileName = multipartRequest.getFilesystemName("upFile");
+			String renamedFileName = multipartRequest.getFilesystemName("upFile"); //중복될 경우 바뀔 이름
 			
-	//		Board board = new Board(0, title, writer, content, null, 0, null);
+			
 			Board board = new Board();
 			board.setTitle(title);
 			board.setWriter(writer);
@@ -91,7 +77,7 @@ public class BoardEnrollServlet extends HttpServlet {
 			//첨부파일이 있는 경우
 			//multipartRequest.getFile("upFile"):File != null
 			if(originalFileName != null) {
-				Attachment attach = new Attachment();
+				Attachment attach = new Attachment(); //우리가 만든 vo객체
 				attach.setOriginalFileName(originalFileName);
 				attach.setRenamedFileName(renamedFileName);
 				board.setAttach(attach);
@@ -99,22 +85,30 @@ public class BoardEnrollServlet extends HttpServlet {
 			
 			//2. 업무로직 : db에 insert
 			int result = boardService.insertBoard(board);
-			String msg = (result > 0) ? 
-							"게시글 등록 성공!" :
-								"게시글 등록 실패!";
-			String location = request.getContextPath();
-			location += (result > 0) ?
-							"/board/boardView?no=" + board.getNo() : 
-								"/board/boardList";
+			System.out.println("result@servlet = " + result);
+			System.out.println("board@EnrollServlet = " + board);
 			
-			//3. DML요청 : 리다이렉트 & 사용자피드백
-			// /mvc/board/boardList
 			HttpSession session = request.getSession();
-			session.setAttribute("msg", msg);
-			response.sendRedirect(location);
-		} catch (Exception e) {
+			
+			//3. DML요청 : redirect & user feedback
+			// redirect to /mvc/board/boardList
+			if(result > 0) {
+				session.setAttribute("msg", "게시판에 글이 등록되었습니다.");
+				//게시글 등록 성공 시 바로 상세보기 페이지로 이동할 것
+				
+				//작성한 게시글 db에서 가져오기
+				board = boardService.selectLastBoard();
+				System.out.println("board.no@EnrollServlet = " + board.getNo());
+				
+				response.sendRedirect(request.getContextPath() + "/board/boardView?no=" + board.getNo());
+			}
+			else {
+				session.setAttribute("msg", "게시판 글 등록에 실패했습니다.");
+				response.sendRedirect(request.getContextPath() + "/board/boardList");
+			}
+		}catch(Exception e) {
 			e.printStackTrace();
-			throw e; // was한테 다시 던져서 에러페이지로 전환함.
+			throw e; //was한테 다시 던져서 에러페이지로 전환
 		}
 	}
 

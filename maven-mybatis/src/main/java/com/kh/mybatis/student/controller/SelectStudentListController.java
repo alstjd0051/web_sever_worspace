@@ -14,7 +14,7 @@ import com.kh.mybatis.student.model.service.StudentServiceImpl;
 import com.kh.mybatis.student.model.vo.Student;
 
 public class SelectStudentListController extends AbstractController {
-
+	
 	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
@@ -30,11 +30,11 @@ public class SelectStudentListController extends AbstractController {
 			//2. jsp위임
 			request.setAttribute("list", list);
 			request.setAttribute("mapList", mapList);
-		} catch (Exception e) {
+		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		return "student/selectList";
+		return "/student/selectList";
 	}
 	
 	

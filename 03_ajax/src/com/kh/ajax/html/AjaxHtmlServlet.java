@@ -23,19 +23,15 @@ public class AjaxHtmlServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1. 업무로직
+		// 1. 업무로직 (dao에서 가져왔다 샘 치고)
 		List<Member> list = new ArrayList<>();
 		list.add(new Member("hwangj", "황제성", "hwang.jpg"));
-		list.add(new Member("jjj", "쥴리아 로버츠", "juliaRoberts.jpg"));
-		list.add(new Member("gone", "김고은", "김고은.jpg"));
-		list.add(new Member("dfpk", "다프트펑크", "daftpunk.jpg"));
+		list.add(new Member("dafun", "다프트펑크", "daftpunk.jpg"));
+		list.add(new Member("jsyoon", "유재석", "유재석.jpg"));
 		
 		//2. jsp에 위임
 		request.setAttribute("list", list);
-		request.getRequestDispatcher("/WEB-INF/views/html/member.jsp")
-			   .forward(request, response);
-		
-	
+		request.getRequestDispatcher("/WEB-INF/views/html/member.jsp").forward(request, response);
 	}
 
 }

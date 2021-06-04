@@ -17,36 +17,36 @@ import member.model.service.MemberService;
 import member.model.vo.Member;
 
 /**
- * Servlet Filter implementation class AdminFilter
+ * Servlet Filter implementation class AdminLoginFilter
  */
-//@WebFilter("/admin/*")
+//@WebFilter(
+//		urlPatterns = { 
+//				"/admin/memberlist", 
+//				"/admin/memberRoleUpdate",
+//				"/admin/memberFinder"
+//		})
 public class AdminFilter implements Filter {
 
-	/**
-	 * 관리자가 아닌 부정요청에 대한 처리
-	 */
+ 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		//로그인 여부 확인
 		HttpServletRequest httpReq = (HttpServletRequest)request;
 		HttpServletResponse httpRes = (HttpServletResponse)response;
+		System.out.println("adminlogin filter 실행");
+		
 		HttpSession session = httpReq.getSession();
+		Member loginMember = (Member)session.getAttribute("loginMember");
 		
-		Member loginMember = ((Member)session.getAttribute("loginMember"));
-		//System.out.println("[관리자 권한 페이지 요청 @AdminFilter]");
-		
-		if(loginMember == null || !MemberService.ADMIN_ROLE.equals(loginMember.getMemberRole())){
-			session.setAttribute("msg", "관리자만 사용가능합니다.");
+		if(loginMember == null || !(MemberService.ADMIN_ROLE.equals(loginMember.getMemberRole()))) {
+			session.setAttribute("msg", "관리자만 사용할 수 있습니다.");
 			httpRes.sendRedirect(httpReq.getContextPath());
-			return;
+			System.out.println("AdminLoginFilter 성공!");
+			return; //조기리턴 실행. chain.doFilter가 실행되지 않는다
+			//servlet에 접근하지 못한다
 		}
+
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
-	}
-
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
-	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
 	}
 
 }

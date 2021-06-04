@@ -1,17 +1,18 @@
 package board.model.vo;
 
 public class Attachment {
-
-	private int no;
-	private int boardNo;
+	
+	private int no; //첨부파일 고유넘버
+	private int boardNo; //참조하고있는 보드의 넘버
 	private String originalFileName;
 	private String renamedFileName;
-	private boolean status; // staus Y | N 처리되므로, jdbc에서 형변환필요.
+	private boolean status; //db에서는 Y | N 처리되므로, jdbc에서 형변환 필요
 	
 	public Attachment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	public Attachment(int no, int boardNo, String originalFileName, String renamedFileName, boolean status) {
 		super();
 		this.no = no;
@@ -20,36 +21,47 @@ public class Attachment {
 		this.renamedFileName = renamedFileName;
 		this.status = status;
 	}
+
 	public int getNo() {
 		return no;
 	}
+
 	public void setNo(int no) {
 		this.no = no;
 	}
+
 	public int getBoardNo() {
 		return boardNo;
 	}
+
 	public void setBoardNo(int boardNo) {
 		this.boardNo = boardNo;
 	}
+
 	public String getOriginalFileName() {
 		return originalFileName;
 	}
-	public void setOriginalFileName(String orginalFileName) {
-		this.originalFileName = orginalFileName;
+
+	public void setOriginalFileName(String originalFileName) {
+		this.originalFileName = originalFileName;
 	}
+
 	public String getRenamedFileName() {
 		return renamedFileName;
 	}
+
 	public void setRenamedFileName(String renamedFileName) {
 		this.renamedFileName = renamedFileName;
 	}
+
 	public boolean isStatus() {
 		return status;
 	}
+
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+
 	@Override
 	public String toString() {
 		return "Attachment [no=" + no + ", boardNo=" + boardNo + ", originalFileName=" + originalFileName
@@ -57,4 +69,5 @@ public class Attachment {
 	}
 	
 	
+
 }

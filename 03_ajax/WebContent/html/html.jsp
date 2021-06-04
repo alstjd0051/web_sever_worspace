@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ajax - html</title>
+<title>Ajax - html</title>
 <style>
-table { 
-	border-collapse: collapse; 
+table{
+	border-collapse: collapse;
 	border: 1px solid #000;
 	margin: 5px;
 }
-th, td {
+th, td{
 	border: 1px solid #000;
 }
-table img {
+table img{
 	width: 150px;
 }
 </style>
@@ -24,6 +24,7 @@ table img {
 	<h1>html</h1>
 	<input type="button" value="실행" id="btn" />
 	<div class="wrapper"></div>
+	
 <script>
 $(btn).click(function(){
 	$.ajax({
@@ -36,10 +37,10 @@ $(btn).click(function(){
 		error: function(xhr, status, err){
 			console.log(xhr, status, err);
 		}
-		
 	});
 });
 
 </script>
+	
 </body>
 </html>

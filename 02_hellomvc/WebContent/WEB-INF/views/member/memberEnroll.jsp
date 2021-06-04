@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
-<form name="checkIdDuplicateFrm">
+<form name="checkIdDuplicateFrm" action="">
 	<input type="hidden" name="memberId" />
 </form>
 <section id=enroll-container>
@@ -84,20 +84,20 @@
 	</form>
 </section>
 <script>
-/**
- * 중복검사 이후 다시 아이디를 변경하는 것을 방지.
+
+/*
+ * 중복검사 이후 다시 아이디를 변경하는 것을 방지
  */
 $("#memberId_").change(function(){
 	$("#idValid").val(0);
-});
-
+})
 
 /**
- * 아이디 중복 검사함수
- * 팝업창으로 [name=checkIdDuplicateFrm]을 제출한다.
- * 현재 페이지에 머물면서 서버통신하기 위함.
+ * 아이디 중복 검사 함수
+ 팝업창으로  [name=checkIdDuplicateFrm]을 제출한다.
+ 현재 페이지에 머물면서 서버 통신하기 위함.
  */
-function checkIdDuplicate(){
+ function checkIdDuplicate(){
 	var $memberId = $("#memberId_");
 	if(/^[a-zA-Z0-9_]{4,}$/.test($memberId.val()) == false){
 		alert("유효한 아이디를 입력해주세요.");
@@ -105,27 +105,24 @@ function checkIdDuplicate(){
 		return;
 	}
 	
-	//1.팝업생성
+	//1. 팝업 생성
 	//popup Window객체의 name속성 : checkIdDuplicatePopup
-	var title = "checkIdDuplicatePopup";
-	open(
-			"", 
-			title, 
-			"width=300px, height=200px, left=200px, top=200px"
-		);
+	//주소는 코드로 처리
+	var title = "checkIdDuplicatePopup"
+	open("", title, 
+			"width=300px, height=200px, left=200px, top=200px");
 	
-	//2.폼제출
+	
+	//2. 폼 제출
+	//id, name값은 직접 호출 가능
 	$frm = $(document.checkIdDuplicateFrm);
-	$frm.find("[name=memberId]").val($memberId.val()); // 사용자 입력 id세팅
-	console.log($memberId.val());
-	
-	$frm.attr("action", "<%= request.getContextPath() %>/member/checkIdDuplicate")
-		.attr("method", "POST")
-		.attr("target", title) //popup과 form을 연결
-		.submit();
-	
-	
+	$frm.find("[name=memberId]").val($memberId.val()); //사용자 입력 id 셋
+	$frm.attr("action", "<%=request.getContextPath()%>/member/checkIdDuplicate")
+			.attr("method", "POST")
+			.attr("target", title) //popup과 form을 연결
+			.submit();
 }
+
 
 /**
  * 회원가입 유효성 검사
@@ -141,11 +138,11 @@ $(document.memberEnrollFrm).submit(function(){
 	}
 	
 	var $idValid = $("#idValid");
-	if($idValid.val() == 0){
-		alert("아이디 중복검사 해주세요.");
-		$idValid.prev().focus();
-		return false;
-	}
+    if($idValid.val() == 0){
+        alert("아이디 중복검사 해주세요.");
+        $idValid.prev().focus();
+        return false;
+    }  
 	
 	
 	//password

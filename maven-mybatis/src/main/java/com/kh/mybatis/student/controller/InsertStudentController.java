@@ -13,17 +13,17 @@ import com.kh.mybatis.student.model.service.StudentServiceImpl;
 import com.kh.mybatis.student.model.vo.Student;
 
 public class InsertStudentController extends AbstractController {
-
+	
 	//controller가 의존하는 service단 객체는 interface를 통해 제어한다.
 	private StudentService studentService = new StudentServiceImpl();
-	
+
 	@Override
 	public String doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "student/insertStudent";
 	}
 
 	@Override
-	public String doPost(HttpServletRequest request, HttpServletResponse response)
+	public String doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		try {
 			//1. 사용자 입력값 처리
@@ -35,17 +35,17 @@ public class InsertStudentController extends AbstractController {
 			
 			//2. 업무로직
 			int result = studentService.insertStudent(student);
-		
-			//3. 사용자피드백 및 리다이렉트
-			request.getSession().setAttribute("msg", "학생 등록 성공!");
 			
+			//3. 사용자 피드백 및 리다이렉트
+			String msg = "학생 등록 성공!";
+			request.getSession().setAttribute("msg", msg);
+		
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e; 
+			throw e; //container에 에러 던지기			
 		}
 		
 		return "redirect:/student/insertStudent.do";
 	}
 
-	
 }

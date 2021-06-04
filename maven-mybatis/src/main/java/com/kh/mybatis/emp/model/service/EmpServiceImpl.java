@@ -1,19 +1,19 @@
 package com.kh.mybatis.emp.model.service;
 
-import static com.kh.mybatis.common.MybatisUtils.getSqlSession;
-
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import static com.kh.mybatis.common.MybatisUtils.*;
+
 import com.kh.mybatis.emp.model.dao.EmpDao;
 import com.kh.mybatis.emp.model.dao.EmpDaoImpl;
 
 public class EmpServiceImpl implements EmpService {
-
-	private EmpDao empDao = new EmpDaoImpl();
 	
+	private EmpDao empDao = new EmpDaoImpl();
+
 	@Override
 	public List<Map<String, Object>> selectAllEmp() {
 		SqlSession session = getSqlSession();
@@ -23,17 +23,17 @@ public class EmpServiceImpl implements EmpService {
 	}
 
 	@Override
-	public List<Map<String, Object>> search1(Map<String, Object> param) {
+	public List<Map<String, Object>> select1(Map<String, Object> param) {
 		SqlSession session = getSqlSession();
-		List<Map<String, Object>> list = empDao.search1(session, param);
+		List<Map<String, Object>> list = empDao.select1(session, param);
 		session.close();
 		return list;
 	}
 
 	@Override
-	public List<Map<String, Object>> search2(Map<String, Object> param) {
+	public List<Map<String, Object>> select2(Map<String, Object> param) {
 		SqlSession session = getSqlSession();
-		List<Map<String, Object>> list = empDao.search2(session, param);
+		List<Map<String, Object>> list = empDao.select2(session, param);
 		session.close();
 		return list;
 	}
@@ -41,15 +41,15 @@ public class EmpServiceImpl implements EmpService {
 	@Override
 	public List<Map<String, String>> selectJobList() {
 		SqlSession session = getSqlSession();
-		List<Map<String, String>> jobList = empDao.selectJobList(session);
+		List<Map<String, String>> list = empDao.selectJobList(session);
 		session.close();
-		return jobList;
+		return list;
 	}
 
 	@Override
-	public List<Map<String, Object>> search3(Map<String, Object> param) {
+	public List<Map<String, Object>> select3(Map<String, Object> param) {
 		SqlSession session = getSqlSession();
-		List<Map<String, Object>> list = empDao.search3(session, param);
+		List<Map<String, Object>> list = empDao.select3(session, param);
 		session.close();
 		return list;
 	}
@@ -57,42 +57,33 @@ public class EmpServiceImpl implements EmpService {
 	@Override
 	public List<Map<String, String>> selectDeptList() {
 		SqlSession session = getSqlSession();
-		List<Map<String, String>> deptList = empDao.selectDeptList(session);
+		List<Map<String, String>> list = empDao.selectDeptList(session);
 		session.close();
-		return deptList;
+		return list;
 	}
 
 	@Override
-	public Map<String, Object> selectOneEmp(String empId) {
+	public Map<String, Object> selectOne(int empId) {
 		SqlSession session = getSqlSession();
-		Map<String, Object> emp = empDao.selectOneEmp(session, empId);
+		Map<String, Object> emp = empDao.selectOne(session, empId);
 		session.close();
 		return emp;
 	}
 
 	@Override
-	public int updateEmp(Map<String, String> param) {
+	public int updateEmp(Map<String, Object> param) {
 		SqlSession session = getSqlSession();
 		int result = 0;
 		try {
 			result = empDao.updateEmp(session, param);
 			session.commit();
-		} catch(Exception e) {
+		}catch(Exception e) {
 			session.rollback();
-			throw e;
-		} finally {
+		}finally {
 			session.close();
 		}
 		
 		return result;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-
 }

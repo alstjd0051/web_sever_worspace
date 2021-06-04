@@ -4,19 +4,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${param.title}</title>
+<title>${ param.title }</title>
 <style>
-header, section, footer {
-	border: 1px solid #000;
-	margin: 10px 0;
-}
-section {
-	height: 500px;
-}
+	header, section, footer{
+		border: 1px solid black;
+		margin : 8px;
+	}
+	section{
+		height: 500px;
+	}
 </style>
 </head>
 <body>
 	<header>
-		<h1>${param.title}</h1>
+		<h1>${ param.title }</h1>	
 	</header>
 	<section>

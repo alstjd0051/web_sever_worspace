@@ -5,20 +5,21 @@ import java.util.Map;
 
 public interface EmpService {
 
-	List<Map<String, Object>> selectAllEmp();
+	public List<Map<String, Object>> selectAllEmp();
 
-	List<Map<String, Object>> search1(Map<String, Object> param);
+	public List<Map<String, Object>> select1(Map<String, Object> param);
 
-	List<Map<String, Object>> search2(Map<String, Object> param);
+	public List<Map<String, Object>> select2(Map<String, Object> param);
 
-	List<Map<String, String>> selectJobList();
+	public List<Map<String, String>> selectJobList();
 
-	List<Map<String, Object>> search3(Map<String, Object> param);
+	public List<Map<String, Object>> select3(Map<String, Object> param);
 
-	List<Map<String, String>> selectDeptList();
+	public List<Map<String, String>> selectDeptList();
 
-	Map<String, Object> selectOneEmp(String empId);
+	public Map<String, Object> selectOne(int empId);
 
-	int updateEmp(Map<String, String> param);
+	public int updateEmp(Map<String, Object> param);
 
 }
+ 

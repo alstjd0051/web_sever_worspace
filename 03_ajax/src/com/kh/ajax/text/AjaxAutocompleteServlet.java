@@ -50,30 +50,29 @@ public class AjaxAutocompleteServlet extends HttpServlet {
 					"황윤진",
 					"남윤지"																															
 				);
-	
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1.사용자입력값
+		// 1. 사용자 입력값
 		String search = request.getParameter("search");
 		
-		//2.업무로직
+		//2. 업무로직
 		List<String> resultList = new ArrayList<>();
 		for(String name : list) {
 			if(name.contains(search)) {
 				resultList.add(name);
 			}
 		}
-		System.out.println(resultList);
+		System.out.println("resultList@servlet = " + resultList);
 		
-		//3.응답처리
+		//3. 응답처리
 		response.setContentType("text/csv; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		for(String name : resultList) {
 			out.println(name);
 		}
-		
 	}
 
 }

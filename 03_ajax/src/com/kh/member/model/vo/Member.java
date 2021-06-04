@@ -3,8 +3,7 @@ package com.kh.member.model.vo;
 public class Member {
 	private String id;
 	private String name;
-	private String profile;	// 프로필이미지 파일명
-	
+	private String profile; //회원 프로필 이미지 파일명
 	public Member() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -37,7 +36,5 @@ public class Member {
 	public String toString() {
 		return id + "," + name + "," + profile;
 	}
-	
-	
-	
+
 }

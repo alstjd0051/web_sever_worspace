@@ -12,6 +12,9 @@ public class BoardException extends RuntimeException {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * 우리가 호출한 생성자
+	 */
 	public BoardException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
@@ -28,4 +31,5 @@ public class BoardException extends RuntimeException {
 	}
 	
 	
+
 }

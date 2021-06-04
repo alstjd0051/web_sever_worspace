@@ -2,10 +2,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>    
-<%
-	Board board = (Board) request.getAttribute("board");
-%>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/css/board.css" />
+<%
+	Board board = (Board)request.getAttribute("board");
+%>
 <section id="board-container">
 <h2>게시판 수정</h2>
 <form 
@@ -28,17 +28,19 @@
 	<tr>
 		<th>첨부파일</th>
 		<td >
-			<%-- input:file의 value속성은 보안성을 이유로 임의변경할 수 없다. --%>
-			<input type="file" name="upFile" value="">
-			<% if(board.getAttach() != null) { %>
-			<p style="margin: 5px 0;">
-				<img src="<%= request.getContextPath() %>/images/file.png" width="16px" />
-				<%= board.getAttach().getOriginalFileName() %>
-				<input type="checkbox" name="delFile" id="delFile" value="<%= board.getAttach().getNo() %>"/>
-				<label for="delFile">삭제</label>
-			</p>
-			<% } %>
+		<%-- input:file의 value속성은 보안성을 이유로 임의변경 할 수 없다. --%>
+			<input type="file" name="upFile">
+            <% if(board.getAttach() != null){ %>
+            <p style ="margin:5px 0;">
+                <img src="<%= request.getContextPath() %>/images/file.png" width="16px"/>
+                <%= board.getAttach().getOriginalFileName() %>
+                <input type="checkbox" name="delFile" id="delFile" value="<%= board.getAttach().getNo()%>"/>
+                <label for="delFile">기존파일 삭제</label>
+            </p>
+            <% } %>
 		</td>
+		
+		
 	</tr>
 	<tr>
 		<th>내 용</th>
@@ -61,16 +63,16 @@ $("[name=upFile]").change(function(){
 		$("#delFile")
 			.prop("checked", true)
 			.on('click', function(){
-				return false;
-			});
-					
+				return false; //한번 체크하면 체크 풀 수 없음
+			})
 	}
-	else {
-		//파일 선택 취소
+	else{
+		//파일 선택 취소 (파일선택창에서 열기 안하고 취소 눌렀을 때)
 		$("#delFile")
 			.prop("checked", false)
-			.off('click');
+			.off('click'); //return false처리했던 이벤트 헨들러 제거
 	}
+	
 });
 
 

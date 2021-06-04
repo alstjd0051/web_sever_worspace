@@ -24,24 +24,18 @@ public class AjaxCsvServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//1.업무로직
+		// 1. 업무로직 (dao에서 가져왔다 샘 치고)
 		List<Member> list = new ArrayList<>();
 		list.add(new Member("hwangj", "황제성", "hwang.jpg"));
-		list.add(new Member("jjj", "쥴리아 로버츠", "juliaRoberts.jpg"));
-		list.add(new Member("gone", "김고은", "김고은.jpg"));
-		list.add(new Member("dfpk", "다프트펑크", "daftpunk.jpg"));
+		list.add(new Member("dafun", "다프트펑크", "daftpunk.jpg"));
+		list.add(new Member("jsyoon", "유재석", "유재석.jpg"));
 		
-		//2.응답처리
+		//2. 응답처리
 		response.setContentType("text/csv; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		for(Member m : list) {
-			out.println(m); // toString자동 호출
+			out.println(m); //toString 자동 호출
 		}
-		
-		
-		
-		
 	}
 
 }

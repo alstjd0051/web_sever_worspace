@@ -1,6 +1,7 @@
 package com.kh.jstl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +27,12 @@ public class CoreBasicsServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<Person> list = Arrays.asList(
+		List<Person> list = new ArrayList<>(Arrays.asList(
 					new Person("honggd", "홍길동", '남', 35, true),
 					new Person("sinsa", "신사임당", '여', 58, true),
 					new Person("ygs123", "유관순", '여', 16, false)				
-				);
+				));
+		
 		request.setAttribute("personList", list);
 		
 		Map<String, Object> map = new HashMap<>();
@@ -38,7 +40,7 @@ public class CoreBasicsServlet extends HttpServlet {
 		map.put("num", 3.456);
 		map.put("now", System.currentTimeMillis());
 		request.setAttribute("map", map);
-		
+	
 		request.getRequestDispatcher("/jstl/coreBasics.jsp")
 			   .forward(request, response);
 	}

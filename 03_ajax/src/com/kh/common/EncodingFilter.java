@@ -10,8 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
 /**
- * web.xml에 등록된 순서대로 처리됨.
- * web.xml이 @WebFilter 보다 우선 처리.
+ * Servlet Filter implementation class EncodingFilter
  */
 @WebFilter("/*")
 public class EncodingFilter implements Filter {
@@ -22,7 +21,7 @@ public class EncodingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		//인코딩처리
 		request.setCharacterEncoding("utf-8");
-//		System.out.println("[utf-8] encoding 처리함.");
+		System.out.println("[utf-8] encoding 처리함.");
 
 		// pass the request along the filter chain
 		chain.doFilter(request, response);

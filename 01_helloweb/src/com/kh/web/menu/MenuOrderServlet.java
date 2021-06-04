@@ -11,44 +11,43 @@ import javax.servlet.http.HttpServletResponse;
 public class MenuOrderServlet extends HttpServlet {
 
 	@Override
-	protected void doGet(
-			HttpServletRequest request, 
-			HttpServletResponse response) 
-			throws ServletException, IOException {
-		//1. 사용자 입력값 처리
-		String main_menu = request.getParameter("main_menu");
-		String side_menu = request.getParameter("side_menu");
-		String drink_menu = request.getParameter("drink_menu");
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//메인메뉴, 사이드메뉴, 음료메뉴, 총 결제금액 계산
+		String mainMenu = request.getParameter("main_menu");
+		String sideMenu = request.getParameter("side_menu");
+		String drinkMenu = request.getParameter("drink_menu");
 		
-		//출력식으로 확인
+		int mainPrice = 0;
+		int sidePrice = 0;
+		int drinkPrice = 0;
 		
-		//2. 합계계산 switch문
-		int price = 0;
-		switch(main_menu) {
-		case "한우버거": price += 5000; break;
-		case "밥버거": price += 4500; break;
-		case "치즈버거": price += 4000; break;
+		switch(mainMenu) {
+			case "한우버거" : mainPrice = 5000; break;
+			case "밥버거" : mainPrice = 4500; break;
+			case "치즈버거" : mainPrice = 4000; break;
 		}
-		switch(side_menu) {
-		case "감자튀김": price += 1500; break;
-		case "어니언링": price += 1700; break;
+		switch(sideMenu) {
+		case "감자튀김" : sidePrice = 1500; break;
+		case "어니언링" : sidePrice = 1700; break;
 		}
-		switch(drink_menu) {
-		case "콜라": 
-		case "사이다": price += 1000; break; // switch fall-through
-		case "커피": price += 1500; break;
-		case "밀크쉐이크": price += 2500; break;
+		switch(drinkMenu) {
+		case "콜라" : drinkPrice = 1000; break;
+		case "사이다" : drinkPrice = 1000; break;
+		case "커피" : drinkPrice = 1500; break;
+		case "밀크쉐이크" : drinkPrice = 2500; break;
 		}
 		
-		request.setAttribute("price", price);
-
-		//3. jsp위임 처리 RequestDispatcher
-		// /menu/menuOrder.jsp
-		RequestDispatcher reqDispatcher 
-			= request.getRequestDispatcher("/menu/menuOrder.jsp");
+		int sum = mainPrice + sidePrice + drinkPrice;
+		
+		//sum값 request 속성에 담기
+		request.setAttribute("sum", sum);
+		
+		//input값 보내기
+		RequestDispatcher reqDispatcher = request.getRequestDispatcher("/menu/menuOrder.jsp");
 		reqDispatcher.forward(request, response);
-	
 	}
-
 	
+	
+	
+
 }

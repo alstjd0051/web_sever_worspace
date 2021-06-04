@@ -31,8 +31,6 @@ public class GsonTestServlet extends HttpServlet {
 		response.setContentType("application/json; charset=utf-8");
 		Gson gson = new Gson();
 		gson.toJson(map, response.getWriter());
-		
-		
 	}
 
 }

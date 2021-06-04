@@ -21,7 +21,7 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 <c:if test="${not empty msg}">
 alert("${msg}");
 </c:if>
-<c:remove var="msg" scope="session"/>
+<c:remove var="msg" scope="session" />
 </script>
 </head>
 <body>
@@ -40,7 +40,7 @@ alert("${msg}");
 					<td>
 						<input type="tel" name="tel" maxlength="11" required/>
 					</td>
-				</tr>
+				</tr>	
 				<tr>
 					<td colspan="2">
 						<input type="submit" value="등록" />
@@ -48,9 +48,6 @@ alert("${msg}");
 				</tr>
 			</table>
 		</form>
-		
-		<hr />
-		
 		<h2>회원등록(Map)</h2>
 		<form method="post" action="${pageContext.request.contextPath}/student/insertStudentMap.do">
 			<table id="tbl-student">
@@ -65,7 +62,7 @@ alert("${msg}");
 					<td>
 						<input type="tel" name="tel" maxlength="11" required/>
 					</td>
-				</tr>
+				</tr>	
 				<tr>
 					<td colspan="2">
 						<input type="submit" value="등록" />

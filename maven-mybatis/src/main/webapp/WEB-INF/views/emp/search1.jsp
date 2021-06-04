@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<fmt:setLocale value="ko_kr"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,8 +29,8 @@ div#search-container{
 <div id="emp-container">
 	<h2>사원정보 </h2>
 	
-	<div id="search-container">
-		<form name="empSearchFrm" action="">
+<div id="search-container">
+		<form name="empSearchFrm">
 			<select name="searchType" required>
 				<option value="">검색타입</option>
 				<!-- required여부를 판단할 value="" 반드시 있어야함.-->
@@ -44,8 +43,6 @@ div#search-container{
 			<input type="submit" value="검색" />
 		</form>
 	</div>
-	
-	
 	<table class="tbl-emp">
 		<tr>
 			<th></th><!-- 1부터 넘버링 처리 -->
@@ -64,37 +61,32 @@ div#search-container{
 			<th>퇴사여부</th>
 		</tr>
 		<!-- 조회된 데이터가 있는 경우와 없는 경우를 분기처리 하세요 -->
-		<c:if test="${empty list }">
-		<%-- 조회된 데이터가 없는 경우 --%>
-		<tr>
-			<th colspan="14" style="text-align:center;">조회된 데이터가 없습니다.</th>
-		</tr>
+		<c:if test="${empty requestScope.list}">
+			<tr>
+				<td colspan="14">등록된 사원이 존재하지 않습니다.</td>
+			</tr>
 		</c:if>
-		
-		<c:if test="${not empty list }">
-		<%-- 조회된 데이터가 있는 경우 --%>
-		<c:forEach items="${list}" var="emp" varStatus="vs">
-		<tr>
-			<td>${vs.count}</td>
-			<td>${emp['EMP_ID']}</td>
-			<td>${emp['EMP_NAME']}</td>
-			<td>${fn:substring(emp['EMP_NO'], 0, 8)}******</td>
-			<td>${emp['EMAIL']}</td>
-			<td>${emp['PHONE']}</td>
-			<td>${emp['DEPT_CODE']}</td>
-			<td>${emp['JOB_CODE']}</td>
-			<td>${emp['SAL_LEVEL']}</td>
-			<td><fmt:formatNumber value="${emp['SALARY']}" type="currency"/></td>
-			<td><fmt:formatNumber value="${emp['BONUS']}" type="percent"/> </td>
-			<td>${emp['MANAGER_ID']}</td>
-			<td><fmt:formatDate value="${emp['HIRE_DATE']}" pattern="yyyy/MM/dd"/></td>
-			<td>${emp['QUIT_YN']}</td>
-		</tr>
+		<c:forEach items="${requestScope.list}" var="emp" varStatus="vs">
+			<tr>
+				<td>${vs.count}</td>
+				<td>${emp.empId}</td>
+				<td>${emp.empName}</td>
+				<td>${fn:substring(emp.empNo, 0, 8)}******</td>
+				<td>${emp.email}</td>
+				<td>${emp.phone}</td>
+				<td>${emp.deptCode}</td>
+				<td>${emp.jobCode}</td>
+				<td>${emp.salLevel}</td>
+				<td><fmt:formatNumber value="${emp.salary}" type="currency"/></td>
+				<td><fmt:formatNumber value="${emp.bonus}" type="percent"/></td>
+				<td>${emp.managerId}</td>
+				<td><fmt:formatDate value="${emp.hireDate}" pattern="yyyy/MM/dd"/></td>
+				<td>${emp.quitYN}</td>
+			</tr>
 		</c:forEach>
-		</c:if>
-		
 	</table>
 </div>
+
 
 </body>
 </html>

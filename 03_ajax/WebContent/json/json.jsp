@@ -5,28 +5,29 @@
 <head>
 <meta charset="UTF-8">
 <title>ajax - json</title>
+<script src = "<%= request.getContextPath() %>/js/jquery-3.6.0.js"></script>
 <style>
-table { 
-	border-collapse: collapse; 
+table{
+	border-collapse: collapse;
 	border: 1px solid #000;
 	margin: 5px;
 }
-th, td {
+th, td{
 	border: 1px solid #000;
 }
-table img {
+table img{
 	width: 150px;
 }
 </style>
-<script src="<%= request.getContextPath() %>/js/jquery-3.6.0.js"></script>
+
 </head>
 <body>
 	<h1>JSON</h1>
 	<div>
-		<button type="button" id="btn">실행</button>
+	<button type="button" id="btn">실행</button>
 	</div>
 	<div>
-		<input type="search" id="searchId" placeholder="id검색"/>
+		<input type="search" name="" id="searchId" placeholder="id검색" />
 		<button type="button" id="btn-search-id">검색</button>
 	</div>
 	<div>
@@ -46,21 +47,21 @@ table img {
 			</tr>
 		</table>
 	</div>
-	
 	<div class="wrapper"></div>
-	
+</body>
 
 <script>
 $("#btn-save-member").click(function(){
 	$.ajax({
-		url: "<%= request.getContextPath() %>/json",
+		url: "<%=request.getContextPath()%>/json",
 		method: "post",
-		data: {
-			id: $("[name=id]").val(),
-			name: $("[name=name]").val()
+		data: { //url에 보낼 data
+			id : $("[name=id]").val(),
+			name : $("[name=name]").val()
 		},
 		success: function(data){
 			console.log(data);
+			
 		},
 		error: function(xhr, status, err){
 			console.log(xhr, status, err);
@@ -68,26 +69,25 @@ $("#btn-save-member").click(function(){
 	});
 });
 
-
-
 $("#btn-search-id").click(function(){
 	$.ajax({
-		url: "<%= request.getContextPath() %>/json",
-		data: {
-			searchId: $("#searchId").val()
+		url: "<%=request.getContextPath()%>/json",
+		data: { //url에 보낼 data
+			searchId : $("#searchId").val()
 		},
 		success: function(data){
 			console.log(data);
 			
 			if(data != null){
+				//data표시
 				var $table = $("<table></table>");
-				$table
-					.append(`<tr><th>아이디</th><td>\${data.id}</td></tr>`)
+				$table.append(`<tr><th>아이디</th><td>\${data.id}</td></tr>`) //ec6문법
 					.append(`<tr><th>이름</th><td>\${data.name}</td></tr>`)
-					.append(`<tr><th>프로필</th><td><img src="<%= request.getContextPath() %>/images/\${data.profile}" /></td></tr>`)
+					.append(`<tr><th>프로필</th><td><img src="<%= request.getContextPath() %>/images/\${data.profile}"></td></tr>`);
 				$(".wrapper").html($table);
-			}
-			else {
+				
+				
+			}else{
 				alert("해당 id는 존재하지 않습니다.");
 				$("#searchId").select();
 			}
@@ -100,32 +100,24 @@ $("#btn-search-id").click(function(){
 });
 
 
-
-
 $(btn).click(function(){
 	$.ajax({
-		url: "<%= request.getContextPath() %>/json",
+		url: "<%=request.getContextPath()%>/json",
 		success: function(data){
 			console.log(data);
-			//table data로 가공하기
-			//배열확인후, 하나의 member객체를 (tr>td*3)로 변환할것.
-			var $table = $("<table></table>");
-			var $members = $(data);
-			$members.each(function(index, member){
-				//console.log(index, member);
-				var id = member.id;
-				var name = member.name;
-				var profile = member.profile;
-				
-				var $tr = $("<tr></tr>");
-				$tr.append("<td>" + (index + 1) + "</td>")
-				   .append("<td><img src='<%= request.getContextPath() %>/images/" + profile + "'/></td>")
-				   .append("<td>" + id + "</td>")
-				   .append("<td>" + name + "</td>")
-				   .appendTo($table);
-			});
 			
-			$(".wrapper").html($table);
+			var $table = $("<table></table>");
+			
+			$(data).each(function(index, member){
+			var $tr = $("<tr></tr>");
+				console.log(index, member);
+				$tr.append("<td>"+(member.id)+"</td>")
+					.append("<td>"+(member.name)+"</td>")
+					.append("<td><img src='<%= request.getContextPath() %>/images/"+(member.profile)+"'/></td>")
+					.appendTo($table);
+			});
+			$("body").append($table);
+			
 			
 		},
 		error: function(xhr, status, err){
@@ -134,5 +126,4 @@ $(btn).click(function(){
 	});
 });
 </script>
-</body>
 </html>

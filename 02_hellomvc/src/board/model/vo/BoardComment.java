@@ -3,19 +3,20 @@ package board.model.vo;
 import java.sql.Date;
 
 public class BoardComment {
-
-	private int no;				//PK
-	private int commentLevel; 	//댓글 1, 대대글 2
+	
+	private int no; //PK 
+	private int commentLevel; // 댓글: 1, 대댓글: 2
 	private String writer;
 	private String content;
-	private int boardNo;	  	//참조게시글
-	private int commentRef;		//대댓글인 경우 참조댓글, 댓글인 경우 null
+	private int boardNo; //참조게시글의 번호
+	private int commentRef; //대댓글인 경우 참조댓글. 댓글인 경우 null
 	private Date regDate;
 	
 	public BoardComment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 	public BoardComment(int no, int commentLevel, String writer, String content, int boardNo, int commentRef,
 			Date regDate) {
 		super();
@@ -27,6 +28,7 @@ public class BoardComment {
 		this.commentRef = commentRef;
 		this.regDate = regDate;
 	}
+	
 	public int getNo() {
 		return no;
 	}
@@ -69,14 +71,11 @@ public class BoardComment {
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
+	
 	@Override
 	public String toString() {
 		return "BoardComment [no=" + no + ", commentLevel=" + commentLevel + ", writer=" + writer + ", content="
 				+ content + ", boardNo=" + boardNo + ", commentRef=" + commentRef + ", regDate=" + regDate + "]";
 	}
-	
-	
-	
-	
-	
+
 }

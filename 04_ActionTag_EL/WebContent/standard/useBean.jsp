@@ -3,13 +3,8 @@
 <%-- 
 	해당 스코프에서 id와 동일한 속성명으로 저장된 객체를 가져온다. 
 	존재하지 않으면, 해당타입의 객체를 하나 생성한다.
-	
-	OGNL Object Graph Navigation Language
-	(property접근방식)
-	- getter : getter에서 get을 제외하고 소문자로 시작하는 이름
-	- setter : setter에서 set을 제외하고 소문자로 시작하는 이름
 --%>    
-<jsp:useBean id="honngd" class="com.kh.person.model.vo.Person" scope="request"/>
+<jsp:useBean id="honngd" class="com.kh.person.model.vo.Person" scope="request"></jsp:useBean>
 <jsp:useBean id="sinsa" class="com.kh.person.model.vo.Person"></jsp:useBean>
 <jsp:setProperty property="id" value="sssinsa" name="sinsa"/>
 <jsp:setProperty property="name" value="씬사임당" name="sinsa"/>
@@ -22,11 +17,11 @@
 <meta charset="UTF-8">
 <title>useBean</title>
 <style>
-table, th, td {
-	border: 1px solid #000;
-	padding: 5px;
-	margin-bottom: 20px;
-}
+	table, th, td{
+		border : 1px solid black;
+		padding: 5px;
+		margin-bottom: 20px;
+	}
 </style>
 </head>
 <body>
@@ -77,5 +72,6 @@ table, th, td {
 			<td><jsp:getProperty property="married" name="sinsa" /></td>
 		</tr>
 	</table>
+
 </body>
 </html>

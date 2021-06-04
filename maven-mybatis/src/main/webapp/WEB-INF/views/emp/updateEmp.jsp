@@ -31,37 +31,41 @@ table#emp th, table#emp td{
 }
 
 </style>
+
+
+
 </head>
 <body>
 <div class="wrapper">
 <h2>사원정보 수정 :: 동적쿼리 set | trim</h2>
 
+<%-- 조회한 사번이 존재하는 경우 --%>
 <table id="emp">
 	<tr>
 		<th>사번</th>
-		<td>${emp.EMP_ID}</td>
+		<td>${requestScope.emp.empId}</td>
 	</tr>
 	<tr>
 		<th>사원명</th>
-		<td>${emp.EMP_NAME}</td>
+		<td>${requestScope.emp.empName}</td>
 	</tr>
 	<tr>
 		<th>직급</th>
-		<td>${emp.JOB_NAME}</td>
+		<td>${requestScope.emp.jobName}</td>
 	</tr>
 	<tr>
 		<th>부서</th>
-		<td>${emp.DEPT_TITLE}</td>
+		<td>${requestScope.emp.deptTitle}</td>
 	</tr>
 </table>
 <hr />
 <div class="update-wrapper">
 	<!-- 
-		@실습문제 : 사용자는 변경을 원하는 것만 선택한후 제출하게 된다. 
-		제출된 컬럼값만 update하도록한다.(mybatis의 set태그 활용할 것)
-	-->	
-	<form name="empUpdateFrm" action="${pageContext.request.contextPath }/emp/updateEmp.do" method="post">
-		<input type="hidden" name="empId" value="${emp.EMP_ID}" />
+	@실습문제 : 사용자는 원하는 것만 선택한 후 제출하게 된다.
+	제출된 컬럼만 update하도록 한다. (mybatis의 set태그 활용할 것)
+	 -->
+	<form action="${pageContext.request.contextPath }/emp/updateEmp.do" method="post">
+		<input type="hidden" name="empId" value="${param.empId}" />
 	   	직급: 
 	    <select name="jobCode">
 	    	<option value="">선택</option>
@@ -81,23 +85,24 @@ table#emp th, table#emp td{
 	</form>
 </div>
 
-
 	
 </div>
 <script>
-$(document.empUpdateFrm).submit(empUpdateValidate);
-
-function empUpdateValidate(e){
-	//아무것도 입력하지 않은 경우, 전송하지 않는다.
-	var $jobCode = $("[name=jobCode]");
-	var $deptCode = $("[name=deptCode]");
+$("form").on('submit', function(e){
 	
-	if($jobCode.val() == '' && $deptCode.val() == ''){
-		alert("수정할 값을 선택해주세요.");
-		e.preventDefault(); // 폼이 제출되지 않도록 함.
+	var selectedJobCode = $("select[name=jobCode] option:selected").val();
+	var selectedDeptId = $("select[name=deptCode] option:selected").val();
+	
+	var $inputJobCode = $("<input type='hidden' name='jobCode'></input>").val(selectedJobCode);
+	var $inputDeptId = $("<input type='hidden' name='deptId'></input>").val(selectedDeptId);
+	$(this).append($inputJobCode).append($inputDeptId);
+	
+	if(selectedJobCode === '' || selectedDeptId === ''){
+		e.preventDefault();
+		return false;
 	}
 	
-}
+});
 </script>
 </body>
 </html>

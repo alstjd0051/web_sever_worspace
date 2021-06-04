@@ -16,7 +16,6 @@ import board.model.vo.BoardComment;
  */
 @WebServlet("/board/boardCommentInsert")
 public class BoardCommentInsertServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 	private BoardService boardService = new BoardService();
 	
 	/**
@@ -31,19 +30,22 @@ public class BoardCommentInsertServlet extends HttpServlet {
 			String writer = request.getParameter("writer");
 			String content = request.getParameter("content");
 			BoardComment bc = new BoardComment(0, commentLevel, writer, content, boardNo, commentRef, null);
-			System.out.println("boardComment@servlet = " + bc);
+			System.out.println("boardComment@Servlet = " + bc);
 			
 			//2. 업무로직
 			int result = boardService.insertBoardComment(bc);
+//			String msg = result > 0 ? "댓글 등록 성공!" : "댓글 등록 실패!";
+			//어차피 실패하면 오류페이지로 넘어가니까 굳이 msg변수가 필요없음
 			
-			//3. 사용자피드백 & 리다이렉트
+			//3. 사용자 피드백 & 리다이렉트
 			request.getSession().setAttribute("msg", "댓글 등록 성공!");
 			response.sendRedirect(request.getContextPath() + "/board/boardView?no=" + boardNo);
 		
-		} catch(Exception e) {
+		}catch(Exception e) {
 			e.printStackTrace();
-			throw e;
+			throw e; //container(was)에게 던짐
 		}
+		
 	}
 
 }

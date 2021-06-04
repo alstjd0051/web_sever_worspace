@@ -6,23 +6,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
-	//사용자 요청값(String[])을 contains메소드사용을 위해 List로 변환.
-	String[] jobCodeArr = request.getParameterValues("jobCode");
-	List<String> jobCodeList = 
-				jobCodeArr != null ? 
-						Arrays.asList(jobCodeArr) : 
-							null;
+	//사용자 요청값(String[])을 contains()메소드 사용을 위해 List로 변환.
+	String[] jobCodeArr = request.getParameterValues("jobcode");
+	List<String> jobCodeList = jobCodeArr != null? Arrays.asList(jobCodeArr) : null;
+	System.out.println("jobCodeList@jsp = " + jobCodeList);
 	pageContext.setAttribute("jobCodeList", jobCodeList);
 	
-	String[] deptIdArr = request.getParameterValues("deptId");
-	List<String> deptIdList = 
-				deptIdArr != null ?
-						Arrays.asList(deptIdArr) :
-							null;
-	pageContext.setAttribute("deptIdList", deptIdList);					
-				
+	String[] deptCodeArr = request.getParameterValues("deptcode");
+	List<String> deptCodeList = deptCodeArr != null? Arrays.asList(deptCodeArr) : null;
+	System.out.println("deptCodeList@jsp = " + deptCodeList);
+	pageContext.setAttribute("deptCodeList", deptCodeList);
 %>
-<fmt:setLocale value="ko_kr"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,11 +37,19 @@ table.tbl-emp th, table.tbl-emp td{
 div#search-container{
 	padding:15px 0;
 }
-input#btn-search { width: 350px; background: lightslategray; color: white; box-shadow: 0px 3px 15px grey; }
-table#tbl-search { margin:0 auto; }
-table#tbl-search th,table#tbl-search td {padding:5px 15px;}
-table#tbl-search td {text-align:left;}
+	input#btn-search { width: 350px; background: lightslategray; color: white; box-shadow: 0px 3px 15px grey; }
+	table#tbl-search { margin:0 auto; }
+	table#tbl-search th,table#tbl-search td {padding:5px 15px;}
+	table#tbl-search td {text-align:left;}
 </style>
+
+<c:if test="${not empty msg}">
+<script>
+alert("${msg}");
+</script>
+</c:if>
+<c:remove var="msg" scope="session" />
+
 </head>
 <body>
 <div id="emp-container">
@@ -56,57 +58,50 @@ table#tbl-search td {text-align:left;}
 	<div id="search-container">
 		<form name="empSearchFrm" >
 			<h3>검색</h3>
-			<input type="button" value="초기화" />
-			<table id="tbl-search">
-				<!-- 직급조회 -->
-				<tr>
-					<th>직급</th>
-					<td>
-						<c:forEach items="${jobList}" var="map">
-						<input 
-							type="checkbox" name="jobCode" 
-							id="${map.jobCode}" value="${map.jobCode}" 
-							${jobCodeList.contains(map.jobCode) ? 'checked' : ''}/>
-						<label for="${map.jobCode}">${map.jobName}</label>					
-						</c:forEach>
-					</td>
-				</tr>
-				<!-- @실습문제 : 부서 조회(직급조회와 모두 일치하는 사원) 
-					input:checkbox+label 는 3개마다 개행할 것.
-					
-					(심화)인턴사원(D0)도 조회될 수 있도록 할것.
-				-->
-				<tr>
-					<th>부서</th>
-					<td>
-						<c:forEach items="${deptList}" var="map" varStatus="vs">
-						<input 
-							type="checkbox" name="deptId" 
-							id="${map.deptId}" value="${map.deptId}" 
-							${deptIdList.contains(map.deptId) ? 'checked' : ''}/>
-						<label for="${map.deptId}">${map.deptTitle}</label>
-						<c:if test="${vs.count % 3 == 0}"><br/></c:if>
-						</c:forEach>
-						
-						<input 
-							type="checkbox" name="deptId" 
-							id="D0" value="D0" 
-							${deptIdList.contains('D0') ? 'checked' : ''}/>
-						<label for="D0">인턴</label>
-					</td>
-				</tr>
-							
-				<tr>
-					<th colspan="2">
-						<input type="submit" id="btn-search" value="검색"  />
-					</th>
-				</tr>
-			</table>
-		</form>
-	</div>
-	
-	
-	<table class="tbl-emp">
+			<input type="button" id="btn-reset" value="초기화" onclick="location.href='${pageContext.request.contextPath}/emp/search3.do'" />
+		<table id="tbl-search">
+			<!--직급조회 -->
+			<tr>
+				<th>직급</th>
+				<td>
+				<c:forEach items="${requestScope.jobList}" var="map">
+					<input 
+						type="checkbox" name="jobcode" 
+						id="${map.jobCode}" value="${map.jobCode}"
+						${jobCodeList.contains(map.jobCode)? 'checked' : ''} />
+					<label for="${map.jobCode}">${map.jobName}</label>
+				</c:forEach>
+			</tr>
+			<!-- 실습문제 : 부서조회(직급조회와 모두 일치하는 사원)
+				input:checkbox+label는 3개마다 개행할 것
+				
+				(심화) 인턴사원(D0)도 조회될 수 있도록 할 것
+			 -->
+			<tr>
+				<th>부서</th>
+				<td>
+				<c:forEach items="${requestScope.deptList}" var="map" varStatus="vs">
+					<input 
+						type="checkbox" name="deptcode" 
+						id="${map.deptId}" value="${map.deptId}" 
+						${deptCodeList.contains(map.deptId)? 'checked' : ''}/>
+					<label for="${map.deptId}">${map.deptTitle}</label>
+					<c:if test="${vs.count % 3 == 0}"><br></c:if>
+				</c:forEach>
+				<input type="checkbox" name="deptcode" id="D0" value="D0"
+				${deptCodeList.contains('D0')? 'checked' : '' } />
+				<label for="D0">인턴</label>
+				</td>
+			</tr>
+
+			<tr>
+				<th colspan="2">
+					<input type="submit" id="btn-search" value="검색"  />
+				</th>
+			</tr>
+		</table>
+	</form>
+		<table class="tbl-emp">
 		<tr>
 			<th></th><!-- 1부터 넘버링 처리 -->
 			<th>사번</th>
@@ -125,40 +120,32 @@ table#tbl-search td {text-align:left;}
 			<th>퇴사여부</th>
 		</tr>
 		<!-- 조회된 데이터가 있는 경우와 없는 경우를 분기처리 하세요 -->
-		<c:if test="${empty list }">
-		<%-- 조회된 데이터가 없는 경우 --%>
-		<tr>
-			<th colspan="14" style="text-align:center;">조회된 데이터가 없습니다.</th>
-		</tr>
+		<c:if test="${empty requestScope.list}">
+			<tr>
+				<td colspan="15">등록된 사원이 존재하지 않습니다.</td>
+			</tr>
 		</c:if>
-		
-		<c:if test="${not empty list }">
-		<%-- 조회된 데이터가 있는 경우 --%>
-		<c:forEach items="${list}" var="emp" varStatus="vs">
-		<tr>
-			<td>${vs.count}</td>
-			<td>
-				<a href="${pageContext.request.contextPath}/emp/updateEmp.do?empId=${emp['EMP_ID']}">${emp['EMP_ID']}</a>
-			</td>
-			<td>${emp['EMP_NAME']}</td>
-			<td>${fn:substring(emp['EMP_NO'], 0, 8)}******</td>
-			<td>${emp['GENDER']}</td>
-			<td>${emp['EMAIL']}</td>
-			<td>${emp['PHONE']}</td>
-			<td>${emp['DEPT_TITLE']}</td>
-			<td>${emp['JOB_NAME']}</td>
-			<td>${emp['SAL_LEVEL']}</td>
-			<td><fmt:formatNumber value="${emp['SALARY']}" type="currency"/></td>
-			<td><fmt:formatNumber value="${emp['BONUS']}" type="percent"/> </td>
-			<td>${emp['MANAGER_ID']}</td>
-			<td><fmt:formatDate value="${emp['HIRE_DATE']}" pattern="yyyy/MM/dd"/></td>
-			<td>${emp['QUIT_YN']}</td>
-		</tr>
+		<c:forEach items="${requestScope.list}" var="emp" varStatus="vs">
+			<tr>
+				<td>${vs.count}</td>
+				<td><a href="${pageContext.request.contextPath}/emp/updateEmp.do?empId=${emp.empId}">${emp.empId}</a></td>
+				<td>${emp.empName}</td>
+				<td>${fn:substring(emp.empNo, 0, 8)}******</td>
+				<td>${emp.gender}</td>
+				<td>${emp.email}</td>
+				<td>${emp.phone}</td>
+				<td>${emp.deptTitle}</td>
+				<td>${emp.jobName}</td>
+				<td>${emp.salLevel}</td>
+				<td><fmt:formatNumber value="${emp.salary}" type="currency"/></td>
+				<td><fmt:formatNumber value="${emp.bonus}" type="percent"/></td>
+				<td>${emp.managerId}</td>
+				<td><fmt:formatDate value="${emp.hireDate}" pattern="yyyy/MM/dd"/></td>
+				<td>${emp.quitYN}</td>
+			</tr>
 		</c:forEach>
-		</c:if>
-		
 	</table>
+	</div>
 </div>
-
 </body>
 </html>

@@ -7,31 +7,33 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.kh.mybatis.common.MybatisUtils;
 import com.kh.mybatis.student.model.dao.StudentDao;
 import com.kh.mybatis.student.model.dao.StudentDaoImpl;
 import com.kh.mybatis.student.model.vo.Student;
 
 public class StudentServiceImpl implements StudentService {
-
+	
 	private StudentDao studentDao = new StudentDaoImpl();
 
 	@Override
 	public int insertStudent(Student student) {
-		//1. SqlSession 생성
-		SqlSession session = getSqlSession();
+		SqlSession session = MybatisUtils.getSqlSession();
 		int result = 0;
 		try {
+			//1. SqlSession 생성 (Connection생성 대신. mybatis의 역할)
 			//2. dao 업무위임
 			result = studentDao.insertStudent(session, student);
-			//3. transaction 처리: SqlSession에 대해서 commit|rollback
+			//3. transaction처리: SqlSession에 대해서 commit | rollback
 			session.commit();
 		} catch(Exception e) {
 			session.rollback();
-			throw e;
+			throw e; //controller에게 던지기
 		} finally {
-			//4. SqlSession 자원반납 
+			//4. SqlSession 자원반납
 			session.close();
 		}
+		
 		return result;
 	}
 
@@ -40,14 +42,17 @@ public class StudentServiceImpl implements StudentService {
 		int result = 0;
 		SqlSession session = getSqlSession();
 		try {
+			//DML은 트랜젝션 처리
 			result = studentDao.insertStudentMap(session, student);
+			//insert는 무조건 result가 1임. insert가 안되면 무조건 오류가 남
 			session.commit();
-		} catch(Exception e) {
-			session.rollback();
-			throw e;
+		} catch (Exception e) {
+			session.rollback(); //autocommit false한 이유가 이거 하려고
+			throw e; // controller에 던지기
 		} finally {
 			session.close();
 		}
+		
 		return result;
 	}
 
@@ -55,7 +60,7 @@ public class StudentServiceImpl implements StudentService {
 	public int selectStudentCount() {
 		SqlSession session = getSqlSession();
 		int total = studentDao.selectStudentCount(session);
-		session.close();
+		session.close(); //dql은 트랜젝션 처리 없이 바로 자원반납
 		return total;
 	}
 
@@ -77,31 +82,34 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public int updateStudent(Student student) {
-		int result = 0;
 		SqlSession session = getSqlSession();
+		int result = 0;
 		try {
 			result = studentDao.updateStudent(session, student);
 			session.commit();
-		} catch(Exception e) {
+			
+		}catch(Exception e) {
 			session.rollback();
 			throw e;
-		} finally {
+		}finally {
 			session.close();
 		}
+		
 		return result;
 	}
 
 	@Override
 	public int deleteStudent(int no) {
-		int result = 0;
 		SqlSession session = getSqlSession();
+		int result = 0;
 		try {
 			result = studentDao.deleteStudent(session, no);
 			session.commit();
-		} catch(Exception e) {
+			
+		}catch(Exception e) {
 			session.rollback();
 			throw e;
-		} finally {
+		}finally {
 			session.close();
 		}
 		return result;
@@ -118,14 +126,13 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public List<Map<String, Object>> selectStudentMapList() {
 		SqlSession session = getSqlSession();
-		List<Map<String, Object>> list = studentDao.selectStudentMapList(session);
+		List<Map<String, Object>> mapList = studentDao.selectStudentMapList(session);
 		session.close();
-		return list;
+		return mapList;
 	}
+
 	
 	
 	
-	
-	
-	
+
 }

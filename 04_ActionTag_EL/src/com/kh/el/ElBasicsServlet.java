@@ -31,7 +31,8 @@ public class ElBasicsServlet extends HttpServlet {
 		request.setAttribute("coffee", "안티구아");
 		request.setAttribute("serverTime", System.currentTimeMillis());
 		request.setAttribute("honngd", new Person("honngd", "혼길동", '남', 35, true));
-	
+		
+		//asList : 전달한 요소를 array로 만들어주는 static method
 		List<Object> list = Arrays.asList("abc", 12345, new Date());
 		request.setAttribute("list", list);
 		
@@ -41,13 +42,13 @@ public class ElBasicsServlet extends HttpServlet {
 		request.setAttribute("map", map);
 		
 		HttpSession session = request.getSession();
-		session.setAttribute("book", "디지털 미니멀리즘");
+		session.setAttribute("book", "JAVA의 정석");
 		
 		ServletContext application = request.getServletContext();
-		application.setAttribute("movie", "귀멸의 칼날 - 무한열차");
+		application.setAttribute("movie", "귀멸의 칼날");
 		
-		request.getRequestDispatcher("/el/elBasics.jsp")
-			   .forward(request, response);
+		request.getRequestDispatcher("/el/elBasics.jsp").forward(request, response);
+		
 	}
 
 }

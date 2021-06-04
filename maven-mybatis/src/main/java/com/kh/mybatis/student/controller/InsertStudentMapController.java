@@ -13,16 +13,19 @@ import com.kh.mybatis.student.model.service.StudentService;
 import com.kh.mybatis.student.model.service.StudentServiceImpl;
 
 public class InsertStudentMapController extends AbstractController {
-	
+
 	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
 	public String doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
-			//1. 사용자입력값
+			//1. 사용자 입력값
 			String name = request.getParameter("name");
 			String tel = request.getParameter("tel");
+			
+			//지금까진 VO클래스에 담았지만 이번엔 Map에 담아서 처리
+			// -> 이렇게 처리하면 VO클래스를 만들 필요가 없어진다.
 			Map<String, Object> student = new HashMap<>();
 			student.put("name", name);
 			student.put("tel", tel);
@@ -31,15 +34,16 @@ public class InsertStudentMapController extends AbstractController {
 			//2. 업무로직
 			int result = studentService.insertStudentMap(student);
 			
-			//3. 사용자피드백 & redirect
+			
+			//3. 사용자 피드백 & redirect
 			request.getSession().setAttribute("msg", "학생 정보 등록 성공!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
+			throw e; //container에 에러 던지기
 		}
+		
 		return "redirect:/student/insertStudent.do";
 	}
-	
 	
 	
 	

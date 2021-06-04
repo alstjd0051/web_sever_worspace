@@ -19,7 +19,7 @@ public class StudentDaoImpl implements StudentDao {
 	public int insertStudentMap(SqlSession session, Map<String, Object> student) {
 		return session.insert("student.insertStudentMap", student);
 	}
-	
+
 	@Override
 	public int selectStudentCount(SqlSession session) {
 		return session.selectOne("student.selectStudentCount");
@@ -32,8 +32,8 @@ public class StudentDaoImpl implements StudentDao {
 
 	/**
 	 * Map<String, Object>
-	 *  - 컬럼명:String
-	 * 	- 컬럼값:Object
+	 * 컬럼명 : String
+	 * 컬럼값 : Object
 	 */
 	@Override
 	public Map<String, Object> selectOneStudentMap(SqlSession session, int no) {
@@ -50,9 +50,6 @@ public class StudentDaoImpl implements StudentDao {
 		return session.delete("student.deleteStudent", no);
 	}
 
-	/**
-	 * 조회된 행이 없는 경우, 빈 ArrayList객체가 리턴된다.
-	 */
 	@Override
 	public List<Student> selectStudentList(SqlSession session) {
 		return session.selectList("student.selectStudentList");
@@ -62,7 +59,7 @@ public class StudentDaoImpl implements StudentDao {
 	public List<Map<String, Object>> selectStudentMapList(SqlSession session) {
 		return session.selectList("student.selectStudentMapList");
 	}
+	
+	
 
-	
-	
 }

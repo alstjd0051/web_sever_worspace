@@ -14,36 +14,38 @@ import com.kh.mybatis.emp.model.service.EmpService;
 import com.kh.mybatis.emp.model.service.EmpServiceImpl;
 
 public class EmpSearchController1 extends AbstractController {
-
 	private EmpService empService = new EmpServiceImpl();
 
 	@Override
 	public String doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			//1. 사용자입력값
+			//1. 사용자 입력값
 			String searchType = request.getParameter("searchType");
 			String searchKeyword = request.getParameter("searchKeyword");
 			
 			Map<String, Object> param = new HashMap<>();
 			param.put("searchType", searchType);
 			param.put("searchKeyword", searchKeyword);
+			
 			System.out.println("param@controller = " + param);
 			
 			//2. 업무로직
 			List<Map<String, Object>> list = null;
-			if(searchType == null || searchKeyword == null)
+			if(searchType == null || searchKeyword == null)			
 				list = empService.selectAllEmp();
 			else
-				list = empService.search1(param);
+				list = empService.select1(param);
 			
 			System.out.println("list@controller = " + list);
+			
 			//3. jsp위임
 			request.setAttribute("list", list);
-		}catch(Exception e){
+			
+		}catch(Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		return "emp/search1";
+		return "/emp/search1";
 	}
 	
 	

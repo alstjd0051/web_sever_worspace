@@ -10,8 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
 /**
- * web.xml에 등록된 순서대로 처리됨.
- * web.xml이 @WebFilter 보다 우선 처리.
+ * Servlet Filter implementation class EncodingFilter
  */
 @WebFilter("/*")
 public class EncodingFilter implements Filter {

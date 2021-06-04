@@ -13,12 +13,12 @@ public class EmpDaoImpl implements EmpDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> search1(SqlSession session, Map<String, Object> param) {
+	public List<Map<String, Object>> select1(SqlSession session, Map<String, Object> param) {
 		return session.selectList("emp.search1", param);
 	}
 
 	@Override
-	public List<Map<String, Object>> search2(SqlSession session, Map<String, Object> param) {
+	public List<Map<String, Object>> select2(SqlSession session, Map<String, Object> param) {
 		return session.selectList("emp.search2", param);
 	}
 
@@ -28,7 +28,7 @@ public class EmpDaoImpl implements EmpDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> search3(SqlSession session, Map<String, Object> param) {
+	public List<Map<String, Object>> select3(SqlSession session, Map<String, Object> param) {
 		return session.selectList("emp.search3", param);
 	}
 
@@ -38,16 +38,14 @@ public class EmpDaoImpl implements EmpDao {
 	}
 
 	@Override
-	public Map<String, Object> selectOneEmp(SqlSession session, String empId) {
-		return session.selectOne("emp.selectOneEmp", empId);
+	public Map<String, Object> selectOne(SqlSession session, int empId) {
+		return session.selectOne("emp.selectOne", empId);
 	}
 
 	@Override
-	public int updateEmp(SqlSession session, Map<String, String> param) {
+	public int updateEmp(SqlSession session, Map<String, Object> param) {
+		System.out.println("쿼리 : "+session.getConfiguration().getMappedStatement("emp.updateEmp").getBoundSql(param).getSql());
 		return session.update("emp.updateEmp", param);
 	}
-	
-	
-	
-	
+
 }

@@ -4,14 +4,15 @@
 <%@ page language="java" contentType="text/xml; charset=UTF-8" 
 	pageEncoding="utf-8" %>
 <%
-	List<Member> list = (List<Member>) request.getAttribute("list"); 
-%>
+	List<Member> list = (List<Member>)request.getAttribute("list");
+%>     
 <members>
-<% 	for(Member member : list){ %>
+<% for(Member member : list){ %>
 	<member>
 		<id><%= member.getId() %></id>
 		<name><%= member.getName() %></name>
 		<profile><%= member.getProfile() %></profile>
 	</member>
-<% 	} %>
-</members>
+<% } %>
+</members>   
+        
